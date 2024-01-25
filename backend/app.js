@@ -15,6 +15,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 
+
 if (!isProduction) {
   app.use(cors());
 };
@@ -30,7 +31,7 @@ app.use(
     cookie: {
       secure: isProduction,
       sameSite: isProduction && "Lax",
-      httpOnly: true
+      httpOnly: true,
     }
   })
 );
