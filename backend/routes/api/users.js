@@ -12,6 +12,12 @@ const validateSignup = [
     .exists({ checkFalsy: true })
     .isEmail()
     .withMessage('Please provide a valid email.'),
+    check("firstName")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a valid first name."),
+  check("lastName")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a valid last name."),
   check('username')
     .exists({ checkFalsy: true })
     .isLength({ min: 4 })
@@ -32,12 +38,14 @@ router.post(
   '/',
   validateSignup,
   async (req, res) => {
-    const { email, password, username } = req.body;
+    const { email, firstName, lastName, password, username } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ email, username, hashedPassword });
+    const user = await User.create({ email, firstName, lastName, username, hashedPassword });
 
     const safeUser = {
       id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       username: user.username,
     };
