@@ -16,20 +16,26 @@ module.exports = {
         {
           spotId: 1,
           userId: 1,
-          startDate: '01-26-2024',
-          endDate: '02-07-2024'
+          startDate: '2024-01-26',
+          endDate: '2024-02-07'
         },
         {
           spotId: 2,
           userId: 3,
-          startDate: '02-26-2024',
-          endDate: '03-07-2024'
+          startDate: '2024-02-26',
+          endDate: '2024-03-07'
         },
         {
           spotId: 3,
           userId: 2,
-          startDate: '03-26-2024',
-          endDate: '04-07-2024'
+          startDate: '2024-03-26',
+          endDate: '2024-04-07'
+        },
+        {
+          spotId: 3,
+          userId: 2,
+          startDate: '2024-03-26',
+          endDate: '2024-04-07'
         },
       ], { validate: true });
   } catch (err) {
@@ -37,12 +43,14 @@ module.exports = {
     throw err;
   }
   },
-    async down (queryInterface, Sequelize) {
-      options.tableName = 'Bookings';
-      const Op = Sequelize.Op;
-      return queryInterface.bulkDelete(options, {
-        spotId: { [Op.in]: [ 1, 2, 3 ] }
-      }, {});
-    }
-  };
+  async down(queryInterface, Sequelize) {
+    options.tableName = 'Bookings';
+    const Op = Sequelize.Op;
+    return Booking.destroy({
+      where: {
+        spotId: { [Op.in]: [1, 2, 3] }
+      }
+    });
+  }
+};
 
