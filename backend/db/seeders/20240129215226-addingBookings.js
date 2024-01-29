@@ -31,12 +31,6 @@ module.exports = {
           startDate: '2024-03-26',
           endDate: '2024-04-07'
         },
-        {
-          spotId: 3,
-          userId: 2,
-          startDate: '2024-03-26',
-          endDate: '2024-04-07'
-        },
       ], { validate: true });
   } catch (err) {
     console.log(err);
