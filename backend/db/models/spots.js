@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         max: 180
       }
     },
-    name: DataTypes.STRING(50),
+    name: DataTypes.STRING,
     description: DataTypes.STRING,
     price: {
       type: DataTypes.DECIMAL,
