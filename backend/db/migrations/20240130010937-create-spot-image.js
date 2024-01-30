@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       spotId: {
         type: Sequelize.INTEGER,
@@ -25,25 +25,25 @@ module.exports = {
         },
       },
       url: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       preview: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
-    });
-  },
-	async down(queryInterface, Sequelize) {
-		options.tableName = "SpotImages";
-		return queryInterface.dropTable(options);
-	},
+      },
+    },
+    options
+  );
+},
+async down(queryInterface, Sequelize) {
+  options.tableName = "SpotImages";
+  return queryInterface.dropTable(options);
+},
 };

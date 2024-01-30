@@ -14,16 +14,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "CASCADE",
       },
       spotId: {
         type: Sequelize.INTEGER,
@@ -34,8 +25,17 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
       review: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       stars: {
         type: Sequelize.INTEGER,
@@ -43,17 +43,19 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
-    });
-  },
-	async down(queryInterface, Sequelize) {
-		options.tableName = "Reviews";
-		await queryInterface.dropTable(options);
-	},
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+    },
+    options
+  );
+},
+async down(queryInterface, Sequelize) {
+  options.tableName = "Reviews";
+  await queryInterface.dropTable(options);
+},
 };
