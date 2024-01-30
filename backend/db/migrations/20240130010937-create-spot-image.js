@@ -1,6 +1,6 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
-const { SpotImage } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
