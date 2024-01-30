@@ -7,6 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 /** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Spots', {
@@ -27,19 +28,15 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       city: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       state: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       country: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       lat: {
         type: Sequelize.DECIMAL
