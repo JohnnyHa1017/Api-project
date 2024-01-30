@@ -1,27 +1,33 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class Spot extends Model {
+    class Spot extends Model {
     static associate(models) {
-			Spot.belongsTo(models.User, { foreignKey: "ownerId", as: "Owner" });
+
+			Spot.belongsTo(models.User, {
+        foreignKey: "ownerId",
+        as: "Owner"
+      });
 
 			Spot.hasMany(models.Review, {
 				foreignKey: "spotId",
 				onDelete: "CASCADE",
 				hooks: true,
 			});
+
 			Spot.hasMany(models.SpotImage, {
 				foreignKey: "spotId",
 				onDelete: "CASCADE",
 				hooks: true,
 			});
+
 			Spot.hasMany(models.Booking, {
 				foreignKey: "spotId",
 				onDelete: "CASCADE",
 				hooks: true,
 			});
+
     }
   }
   Spot.init({
