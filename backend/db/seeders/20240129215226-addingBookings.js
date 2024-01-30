@@ -37,14 +37,16 @@ module.exports = {
     throw err;
   }
   },
-  async down(queryInterface, Sequelize) {
-    options.tableName = 'Bookings';
-    const Op = Sequelize.Op;
-    return Booking.destroy({
-      where: {
-        spotId: { [Op.in]: [1, 2, 3] }
-      }
-    });
-  }
+	async down(queryInterface, Sequelize) {
+		options.tableName = "Bookings";
+		const Op = Sequelize.Op;
+		return queryInterface.bulkDelete(
+			options,
+			{
+				spotId: { [Op.in]: [1, 2, 3] },
+			},
+			{}
+		);
+	},
 };
 
