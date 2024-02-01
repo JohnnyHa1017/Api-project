@@ -107,7 +107,7 @@ router.get('/:spotId', fetchSpots, async (req, res) => {
         createdAt: spotById.createdAt,
         updatedAt: spotById.updatedAt,
         numReviews: relatedReviews.length,
-        avgRating: spotById.avgRating,
+        avgStarRating: spotById.avgRating,
         SpotImages: relatedImages,
         Owner: relatedOwner,
       }
