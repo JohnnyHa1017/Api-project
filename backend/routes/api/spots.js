@@ -10,21 +10,38 @@ const router = express.Router();
 const fetchSpots = async (req, res, next) => {
   const allSpots = await Spot.findAll();
   const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
-  const avgRating = await Review.findOne({
-    where: {
-      spotId: spot.id,
-    },
-    attributes: [
-      [Sequelize.fn("AVG", Sequelize.col("stars")), "avg"],
-    ],
-  });
 
-  const previewImages = await SpotImage.findAll({
-    where: {
-      spotId: spot.id,
-    },
-      attributes: ["url"],
+    const reviewsLength = await Review.count({
+      where: {
+        spotId: spot.id,
+      },
     });
+
+    const starsColumn = await Review.sum("stars", {
+      where: {
+        spotId: spot.id,
+      },
+    });
+
+    let avgRating;
+
+    if (starsColumn === null) avgRating = 0;
+    else avgRating = (starsColumn / reviewsLength).toFixed(1);
+
+    const previewImages = await SpotImage.findAll({
+      where: {
+        spotId: spot.id,
+      },
+         attributes: ["url"],
+      });
+
+      let imageSearch;
+
+      if (previewImages.length > 0) {
+        imageSearch = previewImages.find(image => image.url).dataValues.url;
+      } else {
+        imageSearch = null;
+      }
 
     return {
       id: spot.id,
@@ -40,8 +57,8 @@ const fetchSpots = async (req, res, next) => {
       price: spot.price,
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
-      avgRating: avgRating.dataValues.avg,
-      previewImages: previewImages.find(image => image.url).dataValues.url,
+      avgRating: avgRating,
+      previewImages: imageSearch
     };
   }));
   req.detailedSpot = detailedSpot;
@@ -179,8 +196,6 @@ try{
       ownerId: userId,
     });
 
-    await setTokenCookie(res, newValidSpot);
-
   return res.status(201).json(newValidSpot);
 } catch (error) {
   if (error instanceof Sequelize.ValidationError) {
@@ -199,25 +214,25 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   const currentUser = req.user.id;
 
   const spot = await Spot.findByPk(spotId);
-  // const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
   if(spot.ownerId !== currentUser){
-    return res.status(400).json({ message: "You are not authorized."});
+    return res.status(403).json({ message: "You are not authorized."});
 };
 
-  const newSpotImage = await SpotImage.create({
-    spotId: spot.id,
-    url,
-    preview,
-  });
+const newSpotImage = await SpotImage.create({ spotId, url, preview });
 
-	return res.status(200).json({
-		id: newSpotImage.id,
-		url: newSpotImage.url,
-		preview: newSpotImage.preview,
-	});
+const updatedSpotImage = await SpotImage.findAll({
+  where: {
+    url: url,
+  },
+  attributes: {
+    exclude: ["createdAt", "updatedAt"],
+  },
+});
+
+res.json(updatedSpotImage);
 });
 
 router.put("/:spotId", requireAuth, validateSpots, async (req, res) => {
@@ -225,12 +240,11 @@ router.put("/:spotId", requireAuth, validateSpots, async (req, res) => {
   const currentUser = req.user.id;
 try {
   const spot = await Spot.findByPk(spotId);
-  // const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
   if(spot.ownerId !== currentUser){
-    return res.status(400).json({ message: "You are not authorized."});
+    return res.status(403).json({ message: "You are not authorized."});
 };
   await spot.update(req.body);
 
@@ -253,12 +267,11 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   const currentUser = req.user.id;
 
   const spot = await Spot.findByPk(spotId);
-  // const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
   if(spot.ownerId !== currentUser){
-    return res.status(400).json({ message: "You are not authorized."});
+    return res.status(403).json({ message: "You are not authorized."});
 };
 await spot.destroy();
 
