@@ -198,9 +198,9 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   const { url, preview } = req.body;
   const currentUser = req.user.id;
 
-const relatedOwner = await User.findByPk(spotId.ownerId);
 
-const spot = await Spot.findByPk(spotId);
+  const spot = await Spot.findByPk(spotId);
+  const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
@@ -225,8 +225,8 @@ router.put("/:spotId", requireAuth, validateSpots, async (req, res) => {
   const { spotId } = req.params;
   const currentUser = req.user.id;
 try {
-const relatedOwner = await User.findByPk(spotId.ownerId);
-const spot = await Spot.findByPk(spotId);
+  const spot = await Spot.findByPk(spotId);
+  const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
@@ -253,8 +253,8 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   const { spotId } = req.params;
   const currentUser = req.user.id;
 
-const relatedOwner = await User.findByPk(spotId.ownerId);
-const spot = await Spot.findByPk(spotId);
+  const spot = await Spot.findByPk(spotId);
+  const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
