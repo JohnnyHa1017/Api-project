@@ -159,6 +159,7 @@ router.get('/:spotId', fetchSpots, async (req, res) => {
 });
 
 router.post('/', requireAuth, validateSpots, async (req, res) => {
+try{
   const userId = req.user.id;
     const {
       address,
@@ -180,6 +181,15 @@ router.post('/', requireAuth, validateSpots, async (req, res) => {
     await setTokenCookie(res, newValidSpot);
 
   return res.status(201).json(newValidSpot);
+} catch (error) {
+  if (error instanceof Sequelize.ValidationError) {
+    const validationErrors = handleValidationErrors(error.errors);
+    return res.status(400).json({
+      message: 'Bad Request',
+      errors: validationErrors,
+    });
+  }
+}
 });
 
 module.exports = router;
