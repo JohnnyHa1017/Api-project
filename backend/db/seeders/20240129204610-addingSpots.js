@@ -1,17 +1,17 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
-
-const { Spot } = require('../models');
+const { User } = require("../models");
+const { Spot } = require("../models");
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
+/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up (queryInterface, Sequelize) {
-  try{
     await Spot.bulkCreate([
       {
         ownerId: 1,
@@ -50,10 +50,6 @@ module.exports = {
         price: 231.68,
       },
     ], { validate: true });
-} catch (err) {
-  console.log(err);
-  throw err;
-}
 },
   async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
