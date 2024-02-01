@@ -198,13 +198,12 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   const { url, preview } = req.body;
   const currentUser = req.user.id;
 
-
   const spot = await Spot.findByPk(spotId);
-  const relatedOwner = await User.findByPk(spot.ownerId);
+  // const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
-  if(relatedOwner !== currentUser){
+  if(spot.ownerId !== currentUser){
     return res.status(400).json({ message: "You are not authorized."});
 };
 
@@ -226,11 +225,11 @@ router.put("/:spotId", requireAuth, validateSpots, async (req, res) => {
   const currentUser = req.user.id;
 try {
   const spot = await Spot.findByPk(spotId);
-  const relatedOwner = await User.findByPk(spot.ownerId);
+  // const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
-  if(relatedOwner !== currentUser){
+  if(spot.ownerId !== currentUser){
     return res.status(400).json({ message: "You are not authorized."});
 };
   await spot.update(req.body);
@@ -254,11 +253,11 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   const currentUser = req.user.id;
 
   const spot = await Spot.findByPk(spotId);
-  const relatedOwner = await User.findByPk(spot.ownerId);
+  // const relatedOwner = await User.findByPk(spot.ownerId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
-  if(relatedOwner !== currentUser){
+  if(spot.ownerId !== currentUser){
     return res.status(400).json({ message: "You are not authorized."});
 };
 await spot.destroy();
