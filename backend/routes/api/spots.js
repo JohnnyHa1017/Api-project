@@ -192,4 +192,64 @@ try{
 }
 });
 
+router.post("/:spotId/images", requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const { url, preview } = req.body;
+  const currentUser = req.user.id;
+
+const relatedOwner = await User.findByPk(spotId.ownerId);
+
+const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
+  };
+  if(relatedOwner !== currentUser){
+    return res.status(400).json({ message: "You are not authorized."});
+};
+
+  const newSpotImage = await SpotImage.create({
+    spotId: spot.id,
+    url,
+    preview,
+  });
+
+	return res.status(200).json({
+		id: newSpotImage.id,
+		url: newSpotImage.url,
+		preview: newSpotImage.preview,
+	});
+});
+
+router.put("/:spotId", requireAuth, validateSpots, async (req, res) => {
+  const { spotId } = req.params;
+  const currentUser = req.user.id;
+try {
+const relatedOwner = await User.findByPk(spotId.ownerId);
+const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
+  };
+  if(relatedOwner !== currentUser){
+    return res.status(400).json({ message: "You are not authorized."});
+};
+  await spot.update(req.body);
+
+  const updatedSpot = await Spot.findByPk(spotId);
+
+  return res.status(200).json(updatedSpot);
+} catch (error) {
+  if (error instanceof Sequelize.ValidationError) {
+    const validationErrors = handleValidationErrors(error.errors);
+    return res.status(400).json({
+      message: 'Bad Request',
+      errors: validationErrors,
+    });
+  }
+}
+});
+
+router.delete("/:spotId", requireAuth, async (req, res) => {
+
+});
+
 module.exports = router;
