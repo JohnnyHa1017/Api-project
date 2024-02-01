@@ -104,6 +104,7 @@ router.get('/current', requireAuth, fetchSpots, async (req, res) => {
         ownerId: userCurrent,
       },
     });
+
     const userSpots = detailedSpot.filter(spot => spot.ownerId === userCurrent);
   res.status(200).json({ Spots: userSpots });
 });
