@@ -39,11 +39,11 @@ const fetchSpots = async (req, res, next) => {
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
       avgRating: avgRating.dataValues.avg,
-      previewImages: previewImages.find(image => image.url),
+      previewImages: previewImages.find(image => image.url).dataValues.url,
     };
   }));
-  next();
   req.detailedSpot = detailedSpot;
+  next();
 };
 
 router.get('/', fetchSpots, (req, res) => {
@@ -51,9 +51,67 @@ router.get('/', fetchSpots, (req, res) => {
   res.status(200).json({ Spots: detailedSpot });
 });
 
-router.get('/current', fetchSpots, (req, res) => {
+router.get('/current', requireAuth, fetchSpots, async (req, res) => {
   const { detailedSpot } = req;
-  res.status(200).json({ OtherSpots: detailedSpot });
+  const userCurrent = req.user.id;
+    const ownerCurrent = await Spot.findAll({
+      where: {
+        ownerId: userCurrent,
+      },
+    });
+    const userSpots = detailedSpot.filter(spot => spot.ownerId === userCurrent);
+  res.status(200).json({ Spots: userSpots });
+});
+
+router.get('/:spotId', fetchSpots, async (req, res) => {
+  const { spotId } = req.params;
+  const { detailedSpot } = req;
+
+    const spotById = detailedSpot.find((spot) => spot.id == spotId);
+
+    if (!spotById) {
+      return res.status(404).json({ error: 'Spot not found' });
+    }
+
+    const relatedReviews = await Review.findAll({
+      where: {
+        spotId: spotById.id,
+      }
+    });
+
+    const relatedImages = await SpotImage.findAll({
+      where: {
+        spotId: spotById.id,
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    });
+
+    const relatedOwner = await User.findByPk(spotById.ownerId, {
+      attributes: ['id', 'firstName', 'lastName'],
+    });
+
+  const response = {
+        id: spotById.id,
+        ownerId: spotById.ownerId,
+        address: spotById.address,
+        city: spotById.city,
+        state: spotById.state,
+        country: spotById.country,
+        lat: spotById.lat,
+        lng: spotById.lng,
+        name: spotById.name,
+        description: spotById.description,
+        price: spotById.price,
+        createdAt: spotById.createdAt,
+        updatedAt: spotById.updatedAt,
+        numReviews: relatedReviews.length,
+        avgRating: spotById.avgRating,
+        SpotImages: relatedImages,
+        Owner: relatedOwner,
+      }
+  return res.status(200).json(response);
 });
 
 module.exports = router;
