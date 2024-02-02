@@ -27,10 +27,12 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       references: { model: "User", key: "id" },
+      onDelete: 'CASCADE'
     },
     spotId: {
       type: DataTypes.INTEGER,
       references: { model: "Spot", key: "id" },
+      onDelete: 'CASCADE'
     },
     review: {
       type: DataTypes.STRING,
