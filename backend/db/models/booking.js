@@ -28,27 +28,22 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     startDate: {
-      type:DataTypes.DATEONLY,
+      type:DataTypes.DATE,
       allowNull: false,
       validate: {
-        isDate: true,
-        isBeforeEndDate(value){
-          if(value < new Date()){
-            throw new Error('startDate cannot be in the past');
-          }
-        }
+        isDate: true
       }
     },
     endDate: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
         isDate: true,
-        isAfterStartDate(value) {
-          if (value <= this.startDate) {
-            throw new Error('endDate cannot be on or before startDate');
-          }
-        },
+        // isAfterStartDate(value) {
+        //   if (value <= this.startDate) {
+        //     throw new Error('endDate cannot be on or before startDate');
+        //   }
+        // },
       },
     },
   }, {
