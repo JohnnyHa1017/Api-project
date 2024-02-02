@@ -278,6 +278,16 @@ await spot.destroy();
 return res.status(200).json({ message: "Successfully deleted" });
 });
 
+const validateReview = [
+  check('review')
+      .exists({ checkFalsy: true })
+      .withMessage('Review text is required'),
+  check('stars')
+      .exists({ checkFalsy: true })
+      .isInt({ min: 1, max: 5})
+      .withMessage('Stars must be an integer from 1 to 5')
+  ];
+
 router.get('/:spotId/reviews',async (req, res) => {
 	const spotId = req.params.spotId;
 
@@ -306,45 +316,38 @@ router.get('/:spotId/reviews',async (req, res) => {
   res.status(200).json({ Reviews: reviewsBySpotId });
 });
 
-router.post("/:spotId/reviews", requireAuth, async (req, res) => {
-	const { spotId } = req.params;
-	const { review, stars } = req.body;
-	const currentUser = req.user.id;
+router.post('/:spotId/reviews', validateReview, async (req, res) => {
+  const { spotId } = req.params;
+  const { review, stars } = req.body
+  const userId = req.user.id;
 
-const spot = await Spot.findByPk(spotId);
-  if (!spot) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
-  };
+  try{
+      const spot = await Spot.findByPk(spotId);
+      if(!spot){
+          return res.status(404).json({message: "Spot couldn't be found"})
+      }
+      const newReview = await Review.create({ userId: userId, spotId: spotId, review, stars });
 
-  const reviews = await Review.findOne({
-    where: { userId: currentUser },
-  });
-  if(Review.userId !== currentUser){
-    return res.status(403).json({ message: "You are not authorized."});
-};
-
-  const errors = {};
-  if (!review) {
-    errors.review = "Review text is required";
-  };
-  if (isNaN(Number(stars)) || stars < 1 || stars > 5) {
-    errors.stars = "Stars must be an integer from 1 to 5";
-  };
-  if (Object.keys(errors).length) {
-    return res.status(400).json({ message: "Bad Request", errors });
-  };
-
-  const existingReview = await Review.findOne({
-    where: { spotId, userId: currentUser },
-  });
-
-if (existingReview) {
-  return res.status(500).json({ message: "User already has a review for this spot" });
-};
-
-const newSpotReview = await Review.create({ currentUser, spotId, review, stars });
-
-  res.status(201).json(newSpotReview);
+      const response = {
+          id: newReview.id,
+          userId : newReview.userId,
+          spotId: newReview.spotId,
+          review: newReview.review,
+          stars: newReview.stars,
+          createdAt: newReview.createdAt,
+          updatedAt: newReview.updatedAt
+      }
+      return res.json(response);
+  }
+  catch(error){
+      return res.status(404).json({
+          "message": "Bad Request",
+          "errors": {
+            "review": "Review text is required",
+            "stars": "Stars must be an integer from 1 to 5",
+          }
+        })
+  }
 });
 
 router.get('/:spotsId/bookings', requireAuth, async (req, res, next) => {
