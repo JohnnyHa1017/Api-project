@@ -286,6 +286,7 @@ router.get('/:spotId/reviews',async (req, res) => {
 	if (!spot) {
 		return res.status(404).json({ message: "Spot couldn't be found" });
 	}
+
   const reviewsBySpotId = await Review.findAll({
     where: {
       userId: req.user.id
@@ -314,11 +315,15 @@ const spot = await Spot.findByPk(spotId);
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
   };
+
+  const reviews = await Review.findOne({
+    where: { userId: currentUser },
+  });
   if(Review.userId !== currentUser){
     return res.status(403).json({ message: "You are not authorized."});
 };
 
-const errors = {};
+  const errors = {};
   if (!review) {
     errors.review = "Review text is required";
   };
@@ -327,11 +332,11 @@ const errors = {};
   };
   if (Object.keys(errors).length) {
     return res.status(400).json({ message: "Bad Request", errors });
-};
+  };
 
-const existingReview = await Review.findOne({
-  where: { spotId, userId: currentUser },
-});
+  const existingReview = await Review.findOne({
+    where: { spotId, userId: currentUser },
+  });
 
 if (existingReview) {
   return res.status(500).json({ message: "User already has a review for this spot" });
