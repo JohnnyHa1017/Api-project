@@ -3,12 +3,72 @@ const { Sequelize } = require('sequelize');
 const { Op } = require('sequelize');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { Spot, Review, User, SpotImage, ReviewImage, Booking } = require('../../db/models');
-const { check, validationResult } = require('express-validator');
+const { check, validationResult, query } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
+const paginationValidation = [
+query('page')
+  .optional()
+  .isInt({ min:1 })
+  .withMessage("Page must be greater than or equal to 1"),
+query('size')
+  .optional()
+  .isInt({ min:1 })
+  .withMessage("Size must be greater than or equal to 1"),
+query('maxLat')
+  .optional()
+  .isFloat({ min: -90, max: 90 })
+  .withMessage("Maximum latitude is invalid"),
+query('minLat')
+  .optional()
+  .isFloat({ min: -180, max: 180 })
+  .withMessage("Minimum latitude is invalid"),
+query('minLng')
+  .optional()
+  .isFloat({ min: -180, max: 180 })
+  .withMessage("Maximum longitude is invalid"),
+query('maxLng')
+  .optional()
+  .isFloat({ min: -180, max: 180 })
+  .withMessage("Minimum longitude is invalid"),
+query('minPrice')
+  .optional()
+  .isFloat({ min: 0 })
+  .withMessage("Minimum price must be greater than or equal to 0"),
+query('maxPrice')
+  .optional()
+  .isFloat({ min: 0 })
+  .withMessage("Maximum price must be greater than or equal to 0"),
+  handleValidationErrors
+];
+
 const fetchSpots = async (req, res, next) => {
-  const allSpots = await Spot.findAll();
+  try{
+    const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+
+  if (parseInt(size) <= 0 || parseInt(page) <= 0) {
+    delete queryOptions.page;
+    delete queryOptions.size;
+  }
+  const queryOptions = {
+    offset: (page - 1) * size,
+    limit: size,
+  };
+
+  if (minLat && maxLat) {
+    queryOptions.lat = { [Op.between]: [parseFloat(minLat), parseFloat(maxLat)] };
+  }
+
+  if (minLng && maxLng) {
+    queryOptions.lng = { [Op.between]: [parseFloat(minLng), parseFloat(maxLng)] };
+  }
+
+  if (minPrice !== undefined && maxPrice !== undefined) {
+    queryOptions.price = { [Op.between]: [parseFloat(minPrice), parseFloat(maxPrice)] };
+  }
+
+  const allSpots = await Spot.findAll(queryOptions);
   const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
 
     const reviewsLength = await Review.count({
@@ -62,8 +122,19 @@ const fetchSpots = async (req, res, next) => {
     };
   }));
   req.detailedSpot = detailedSpot;
+  req.pagination = {
+    page: Number(page),
+    size: Number(size),
+  };
+
+// console.log('Pagination Parameters:', req.pagination);
+// console.log('Query Options:', queryOptions);
+
   next();
-};
+} catch (error) {
+  console.error('Error fetching spots:', error);
+  res.status(500).json({ error: 'Internal Server Error' });
+}};
 
 const validateSpots = [
   check('address')
@@ -108,9 +179,9 @@ const validateSpots = [
   handleValidationErrors
 ];
 
-router.get('/', fetchSpots, (req, res) => {
-  const { detailedSpot } = req;
-  res.status(200).json({ Spots: detailedSpot });
+router.get('/', paginationValidation, fetchSpots, (req, res) => {
+  const { detailedSpot, pagination } = req;
+  res.status(200).json({ Spots: detailedSpot, ...pagination });
 });
 
 router.get('/current', requireAuth, fetchSpots, async (req, res) => {
