@@ -322,12 +322,21 @@ router.post('/:spotId/reviews', validateReview, async (req, res) => {
   const userId = req.user.id;
 
   try{
-      const spot = await Spot.findByPk(spotId);
-      if(!spot){
-          return res.status(404).json({message: "Spot couldn't be found"})
-      }
-      const newReview = await Review.create({ userId: userId, spotId: spotId, review, stars });
+    const existingReview = await Review.findOne({
+      where: { spotId, userId },
+    });
+    if (existingReview) {
+      return res.status(500).json({ message: "User already has a review for this spot" });
+    }
+    const existingSpot = await Spot.findOne({
+      where: { id: spotId },
+    });
 
+    if (!existingSpot) {
+      return res.status(404).json({ message: "Spot couldn't be found" });
+    }
+
+  const newReview = await Review.create({ userId: userId, spotId: spotId, review, stars });
       const response = {
           id: newReview.id,
           userId : newReview.userId,
@@ -337,7 +346,7 @@ router.post('/:spotId/reviews', validateReview, async (req, res) => {
           createdAt: newReview.createdAt,
           updatedAt: newReview.updatedAt
       }
-      return res.json(response);
+       res.json(response);
   }
   catch(error){
       return res.status(404).json({
