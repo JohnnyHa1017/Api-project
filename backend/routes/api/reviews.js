@@ -65,7 +65,10 @@ const fetchUserReviews = async (req, res, next) => {
       },
       {
         model: Spot,
-        detailedSpot
+        ...detailedSpot,
+              attributes: {
+        exclude: ['createdAt', 'updatedAt', 'description']
+      }
       },
       {
         model: ReviewImage,

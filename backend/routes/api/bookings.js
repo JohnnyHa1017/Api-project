@@ -91,8 +91,11 @@ const fetchUserBookings = async (req, res, next) => {
       },
       include: [{
           model: Spot,
-          detailedSpot
-        }],
+          ...detailedSpot,
+          attributes: {
+    exclude: ['createdAt', 'updatedAt', 'description']
+  }
+    }],
       startDate: Booking.startDate,
       endDate: Booking.endDate,
       createdAt: Booking.createdAt,
