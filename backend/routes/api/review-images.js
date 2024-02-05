@@ -1,17 +1,16 @@
-const express = require("express");
-const { Sequelize } = require("sequelize");
-const { Op } = require("sequelize");
-const { requireAuth } = require("../../utils/auth");
-const { Spot, Review, User, SpotImage, ReviewImage, Booking } = require('../../db/models');
+const express = require('express')
+const { Spot, SpotImage, Review, User, Booking, ReviewImage } = require('../../db/models')
+const { requireAuth, restoreUser } = require('../../utils/auth');
+const { handleValidationErrors } = require('../../utils/validation')
+const { Op } = require('sequelize');
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-const router = express.Router();
 
-router.delete("/:imageId", requireAuth, async (req, res) => {
-	const { imageId } = req.params;
-	imageId = parseInt(imageId);
-	
-	const reviewImage = await ReviewImage.findByPk(imageId);
+const router = express.Router()
+
+router.delete('/:imageId', requireAuth, async (req, res) => {
+	const { imageId } = req.params
+
+	const reviewImage = await ReviewImage.findByPk(imageId)
 	if (!reviewImage) {
 		return res.status(404).json({ message: "Review Image couldn't be found" });
 	}
