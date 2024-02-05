@@ -299,17 +299,14 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   if(spot.ownerId !== currentUser){
     return res.status(403).json({ message: "You are not authorized."});
   } else {
-  const newSpotImage = await SpotImage.create({ spotId, url, preview });
 
-  const updatedSpotImage = await SpotImage.findAll({
-    where: {
-      url: url,
-    },
-    attributes: {
-      include: ["id","url", "preview"],
-    },
-  });
-  res.status(200).json(newSpotImage);
+  const newSpotImage = await SpotImage.create({ spotId: spotId, url, preview });
+
+  res.status(200).json({
+    id: spotImage.id,
+    url: spotImage.url,
+    preview: spotImage.preview
+});
 }
 });
 
@@ -405,7 +402,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) =>
 
   try{
     const existingReview = await Review.findOne({
-      where: { spotId, userId: currentUser },
+      where: { spotId: spotId, userId: currentUser },
     });
 
     if (existingReview) {
@@ -421,16 +418,8 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) =>
     }
 
   const newReview = await Review.create({ userId: currentUser, spotId: spotId, review, stars });
-      const response = {
-          id: newReview.id,
-          userId : newReview.userId,
-          spotId: newReview.spotId,
-          review: newReview.review,
-          stars: newReview.stars,
-          createdAt: newReview.createdAt,
-          updatedAt: newReview.updatedAt
-      }
-       res.status(201).json(newReview);
+
+    res.status(201).json(newReview);
   }
   catch(error){
       return res.status(400).json({

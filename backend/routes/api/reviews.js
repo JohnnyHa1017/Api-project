@@ -129,20 +129,14 @@ router.post('/:reviewId/images', requireAuth, countAttachedImages, async (req, r
 };
 
   const newImage = await ReviewImage.create({
-    reviewId,
+    reviewId: reviewId,
     url,
   });
 
-  const newImageAttached = await ReviewImage.findAll({
-    where: {
-      url: url,
-    },
-    attributes: {
-      exclude: ["reviewId", "createdAt", "updatedAt"],
-    },
-  });
-
-  res.status(200).json(newImageAttached);
+  res.status(200).json({
+    id: newImage.id,
+    url: newImage.url
+})
 });
 
 router.put('/:reviewId', requireAuth, validateReview, async (req, res) => {
