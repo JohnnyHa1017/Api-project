@@ -19,11 +19,7 @@ const validateReview = [
 ];
 
 const fetchUserReviews = async (req, res, next) => {
-  const allSpots = await Spot.findAll({
-    attributes: {
-      exclude: ['createdAt', 'updatedAt', 'description']
-    }
-  });
+  const allSpots = await Spot.findAll({});
   const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
   const previewImages = await SpotImage.findAll({
     where: {
@@ -41,6 +37,9 @@ const fetchUserReviews = async (req, res, next) => {
     }
 
     return {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'description'],
+      },
       id: spot.id,
       ownerId: spot.ownerId,
       address: spot.address,
