@@ -123,26 +123,25 @@ if (currentDate > pastStartDate) {
   return res.status(403).json({ message: "Bookings that have been started can't be modified" });
 }
 
-  const existingBooking = await Booking.findOne({
-    where: {
-      spotId: booking.spotId,
-      id: {
-        [Op.not]: booking.id,
+const existingBooking = await Booking.findOne({
+  where: {
+    spotId: booking.spotId,
+    [Op.or]: [
+      {
+        startDate: { [Op.between]: [startDate, endDate] }
       },
-      [Op.or]: [
-        {
-          startDate: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        {
-          endDate: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-      ],
-    },
-  });
+      {
+        endDate: { [Op.between]: [startDate, endDate] }
+      },
+      {
+        [Op.and]: [
+          { startDate: { [Op.lte]: startDate } },
+          { endDate: { [Op.gte]: endDate } }
+        ]
+      }
+    ]
+  }
+});
   if (existingBooking) {
     return res.status(403).json({
       "message": "Sorry, this spot is already booked for the specified dates",
