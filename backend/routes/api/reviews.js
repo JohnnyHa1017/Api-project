@@ -19,7 +19,11 @@ const validateReview = [
 ];
 
 const fetchUserReviews = async (req, res, next) => {
-  const allSpots = await Spot.findAll();
+  const allSpots = await Spot.findAll({
+    attributes: {
+      exclude: ['createdAt', 'updatedAt', 'description']
+    }
+  });
   const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
   const previewImages = await SpotImage.findAll({
     where: {

@@ -50,7 +50,11 @@ const validDates = [
 ];
 
 const fetchUserBookings = async (req, res, next) => {
-  const allSpots = await Spot.findAll();
+  const allSpots = await Spot.findAll({
+    attributes: {
+      exclude: ['createdAt', 'updatedAt', 'description']
+    }
+  });
   const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
   const previewImages = await SpotImage.findAll({
     where: {
@@ -118,6 +122,12 @@ const booking = await Booking.findByPk(bookingId);
   if (booking.userId !== currentUser) {
     return res.status(403).json({ message: "You are not authorized." });
   }
+
+const currentDate = new Date();
+const pastStartDate = new Date(booked.startDate);
+if (currentDate > pastStartDate) {
+  return res.status(403).json({ message: "Past bookings can't be modified" });
+}
 
   const existingBooking = await Booking.findOne({
     where: {
