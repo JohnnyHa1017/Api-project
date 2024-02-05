@@ -120,18 +120,25 @@ const booking = await Booking.findByPk(bookingId);
   }
 
   const existingBooking = await Booking.findOne({
-    where:{
+    where: {
       spotId: booking.spotId,
-      [Op.or]:{
-          startDate : {
-              [Op.between] :[ startDate, endDate]
+      id: {
+        [Op.not]: booking.id,
+      },
+      [Op.or]: [
+        {
+          startDate: {
+            [Op.between]: [startDate, endDate],
           },
+        },
+        {
           endDate: {
-              [Op.between]: [startDate, endDate]
-          }
-      }
-  }
-})
+            [Op.between]: [startDate, endDate],
+          },
+        },
+      ],
+    },
+  });
   if (existingBooking) {
     return res.status(403).json({
       "message": "Sorry, this spot is already booked for the specified dates",
@@ -147,7 +154,6 @@ const booking = await Booking.findByPk(bookingId);
   booking.updatedAt = new Date();
 
   await booking.save();
-
   res.status(200).json(booking);
 });
 
@@ -155,16 +161,29 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
   const { bookingId } = req.params;
   const currentUser = req.user.id;
 
-  const booked = await Review.findByPk(bookingId);
+  const booked = await Booking.findByPk(bookingId);
   if (!booked) {
     return res.status(404).json({ message: "Booking couldn't be found" });
   };
-  if(booked.userId !== currentUser){
-    return res.status(403).json({ message: "You are not authorized."});
-};
-await booked.destroy();
 
-return res.status(200).json({ message: "Successfully deleted" });
+	const spot = await booked.getSpot();
+
+	if (!spot) {
+		return res.status(404).json({ message: "Spot couldn't be found" });
+	}
+
+	if (booked.userId !== currentUser && spot.ownerId !== currentUser) {
+    return res.status(403).json({ message: "You are not authorized."});
+}
+
+const currentDate = new Date();
+const pastStartDate = new Date(booked.startDate);
+if (currentDate > pastStartDate) {
+  return res.status(403).json({ message: "Bookings that have been started can't be deleted" });
+}
+
+await booked.destroy();
+res.status(200).json({ message: "Successfully deleted" });
 });
 
 module.exports = router;

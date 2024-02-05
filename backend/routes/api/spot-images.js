@@ -9,19 +9,19 @@ const router = express.Router();
 
 router.delete("/:imageId", requireAuth, async (req, res) => {
 	const { imageId } = req.params;
-	const currentUser = req.user.id;
+	const userId = req.user.id;
 
 	const spotImage = await SpotImage.findByPk(imageId);
 	if (!spotImage) {
 		return res.status(404).json({ message: "Spot Image couldn't be found" });
 	}
+
 	const spot = await Spot.findByPk(spotImage.spotId);
-
-	if (!spot || spot.ownerId !== currentUser) {
-		return res.status(403).json({ message: "You are not authorized."});
+	if (!spot || spot.ownerId !== userId) {
+		return res.status(403).json({ message: "You are not authorized" });
 	}
-	await spotImage.destroy();
 
+	await spotImage.destroy();
 	res.status(200).json({ message: "Successfully deleted" });
 });
 

@@ -44,31 +44,47 @@ query('maxPrice')
 ];
 
 const fetchSpots = async (req, res, next) => {
-  try{
-    const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+try {
+  let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  if (parseInt(size) <= 0 || parseInt(page) <= 0) {
-    delete queryOptions.page;
-    delete queryOptions.size;
-  }
   const queryOptions = {
-    offset: (page - 1) * size,
-    limit: size,
+    where: {},
   };
 
-  if (minLat && maxLat) {
-    queryOptions.lat = { [Op.between]: [parseFloat(minLat), parseFloat(maxLat)] };
-  }
+  if (!page || isNaN(parseInt(page))) page = 1;
+  if (!size || isNaN(parseInt(size))) size = 20;
 
-  if (minLng && maxLng) {
-    queryOptions.lng = { [Op.between]: [parseFloat(minLng), parseFloat(maxLng)] };
-  }
+  queryOptions.limit = size;
+  queryOptions.offset = size * (page - 1);
 
-  if (minPrice !== undefined && maxPrice !== undefined) {
-    queryOptions.price = { [Op.between]: [parseFloat(minPrice), parseFloat(maxPrice)] };
-  }
+if (minLat) {
+  queryOptions.where.lat = { [Op.gte]: parseFloat(minLat) };
+}
+if (maxLat) {
+  queryOptions.where.lat = { [Op.lte]: parseFloat(maxLat) };
+}
 
-  const allSpots = await Spot.findAll(queryOptions);
+if (minLat && maxLat) {
+  queryOptions.where.lat = {
+    [Op.and]: [
+      { [Op.gte]: parseFloat(minLat) },
+      { [Op.lte]: parseFloat(maxLat) },
+    ],
+  };
+} else if (minLat) {
+  queryOptions.where.lat = { [Op.gte]: parseFloat(minLat) };
+} else if (maxLat) {
+  queryOptions.where.lat = { [Op.lte]: parseFloat(maxLat) };
+}
+
+if (minPrice) {
+  queryOptions.where.price = { [Op.gte]: parseFloat(minPrice) };
+}
+if (maxPrice) {
+  queryOptions.where.price = { [Op.lte]: parseFloat(maxPrice) };
+}
+
+  const allSpots = await Spot.findAll({...queryOptions});
   const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
 
     const reviewsLength = await Review.count({
@@ -127,9 +143,6 @@ const fetchSpots = async (req, res, next) => {
     size: Number(size),
   };
 
-// console.log('Pagination Parameters:', req.pagination);
-// console.log('Query Options:', queryOptions);
-
   next();
 } catch (error) {
   console.error('Error fetching spots:', error);
@@ -187,12 +200,6 @@ router.get('/', paginationValidation, fetchSpots, (req, res) => {
 router.get('/current', requireAuth, fetchSpots, async (req, res) => {
   const { detailedSpot } = req;
   const userCurrent = req.user.id;
-    const ownerCurrent = await Spot.findAll({
-      where: {
-        ownerId: userCurrent,
-      },
-    });
-
     const userSpots = detailedSpot.filter(spot => spot.ownerId === userCurrent);
   res.status(200).json({ Spots: userSpots });
 });
@@ -290,20 +297,19 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   };
   if(spot.ownerId !== currentUser){
     return res.status(403).json({ message: "You are not authorized."});
-};
+  } else {
+  const newSpotImage = await SpotImage.create({ spotId, url, preview });
 
-const newSpotImage = await SpotImage.create({ spotId, url, preview });
-
-const updatedSpotImage = await SpotImage.findAll({
-  where: {
-    url: url,
-  },
-  attributes: {
-    exclude: ["createdAt", "updatedAt"],
-  },
-});
-
-res.status(200).json(updatedSpotImage);
+  const updatedSpotImage = await SpotImage.findAll({
+    where: {
+      url: url,
+    },
+    attributes: {
+      exclude: ["spotId","createdAt", "updatedAt"],
+    },
+  });
+  res.status(200).json(updatedSpotImage);
+}
 });
 
 router.put("/:spotId", requireAuth, validateSpots, async (req, res) => {
@@ -359,7 +365,7 @@ const validateReview = [
       .withMessage('Stars must be an integer from 1 to 5')
   ];
 
-router.get('/:spotId/reviews',async (req, res) => {
+router.get('/:spotId/reviews', async (req, res) => {
 	const spotId = req.params.spotId;
 
 	const spot = await Spot.findByPk(spotId);
@@ -390,15 +396,21 @@ router.get('/:spotId/reviews',async (req, res) => {
 router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) => {
   const { spotId } = req.params;
   const { review, stars } = req.body
-  const userId = req.user.id;
+  const currentUser = req.user.id;
+
+  if (!currentUser) {
+    return res.status(401).json({ message: 'Unauthorized: User not authenticated' });
+  }
 
   try{
     const existingReview = await Review.findOne({
-      where: { spotId, userId },
+      where: { spotId, userId: currentUser },
     });
+
     if (existingReview) {
       return res.status(500).json({ message: "User already has a review for this spot" });
     }
+
     const existingSpot = await Spot.findOne({
       where: { id: spotId },
     });
@@ -407,7 +419,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) =>
       return res.status(404).json({ message: "Spot couldn't be found" });
     }
 
-  const newReview = await Review.create({ userId: userId, spotId: spotId, review, stars });
+  const newReview = await Review.create({ userId: currentUser, spotId: spotId, review, stars });
       const response = {
           id: newReview.id,
           userId : newReview.userId,
@@ -495,8 +507,12 @@ router.post('/:spotId/bookings', requireAuth, validDates, async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-    const spot = await Spot.findByPk(spotId);
 
+  if (!currentUser) {
+    return res.status(401).json({ message: 'Unauthorized: User not authenticated' });
+  }
+
+    const spot = await Spot.findByPk(spotId);
     if (!spot) {
       return res.status(404).json({ message: "Spot couldn't be found" });
     }
@@ -510,17 +526,19 @@ router.post('/:spotId/bookings', requireAuth, validDates, async (req, res) => {
         spotId: spotId,
         [Op.or]: [
           {
-            startDate: {
-              [Op.between]: [startDate, endDate],
-            },
+            startDate: { [Op.between]: [startDate, endDate] }
           },
           {
-            endDate: {
-              [Op.between]: [startDate, endDate],
-            },
+            endDate: { [Op.between]: [startDate, endDate] }
           },
-        ],
-      },
+          {
+            [Op.and]: [
+              { startDate: { [Op.lte]: startDate } },
+              { endDate: { [Op.gte]: endDate } }
+            ]
+          }
+        ]
+      }
     });
     if (existingBooking) {
       return res.status(403).json({
