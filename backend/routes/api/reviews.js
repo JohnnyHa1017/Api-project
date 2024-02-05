@@ -46,6 +46,8 @@ const fetchUserReviews = async (req, res, next) => {
           previewImage: imageSearch,
         },
       };
+
+      return response;
     }));
 
     const userReviews = await Review.findAll({
@@ -76,10 +78,9 @@ const fetchUserReviews = async (req, res, next) => {
       ]
     });
 
-    const reviews = [];
-    for (let i = 0; i < userReviews.length; i++) {
-      let json = userReviews[i].toJSON();
-      let spotImages = json.Spot.SpotImages;
+    const reviews = userReviews.map((userReview) => {
+      let json = userReview.toJSON();
+      let spotImages = json.Spot && json.Spot.SpotImages;
 
       if (spotImages && spotImages.length > 0) {
         json.Spot.previewImage = spotImages[0].url;
@@ -87,16 +88,19 @@ const fetchUserReviews = async (req, res, next) => {
         json.Spot.previewImage = null;
       }
       delete json.Spot.SpotImages;
-      reviews.push(json);
-    }
+      return json;
+    });
 
     req.userReviews = reviews;
-    req.userReviews[0].Spot.previewImage = req.userReviews[0].Spot.previewImage;
+    if (req.userReviews[0] && req.userReviews[0].Spot) {
+      req.userReviews[0].Spot.previewImage = req.userReviews[0].Spot.previewImage;
+    }
     next();
   } catch (error) {
     next(error);
   }
 };
+
 
 const countAttachedImages = async (req, res, next) => {
   const { reviewId } = req.params;
