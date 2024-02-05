@@ -306,10 +306,10 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
       url: url,
     },
     attributes: {
-      exclude: ["spotId","createdAt", "updatedAt"],
+      include: ["id","url", "preview"],
     },
   });
-  res.status(200).json(updatedSpotImage);
+  res.status(200).json(newSpotImage);
 }
 });
 
@@ -430,7 +430,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) =>
           createdAt: newReview.createdAt,
           updatedAt: newReview.updatedAt
       }
-       res.status(201).json(response);
+       res.status(201).json(newReview);
   }
   catch(error){
       return res.status(400).json({
