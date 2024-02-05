@@ -123,7 +123,7 @@ router.post('/:reviewId/images', requireAuth, countAttachedImages, async (req, r
       url: url,
     },
     attributes: {
-      exclude: ["createdAt", "updatedAt"],
+      exclude: ["reviewId", "createdAt", "updatedAt"],
     },
   });
 
