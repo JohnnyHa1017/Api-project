@@ -410,7 +410,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) =>
     if (existingReview) {
       return res.status(500).json({ message: "User already has a review for this spot" });
     }
-    
+
     const existingSpot = await Spot.findOne({
       where: { id: spotId },
     });
@@ -513,7 +513,6 @@ router.post('/:spotId/bookings', requireAuth, validDates, async (req, res) => {
   }
 
     const spot = await Spot.findByPk(spotId);
-
     if (!spot) {
       return res.status(404).json({ message: "Spot couldn't be found" });
     }
@@ -527,17 +526,19 @@ router.post('/:spotId/bookings', requireAuth, validDates, async (req, res) => {
         spotId: spotId,
         [Op.or]: [
           {
-            startDate: {
-              [Op.between]: [startDate, endDate],
-            },
+            startDate: { [Op.between]: [startDate, endDate] }
           },
           {
-            endDate: {
-              [Op.between]: [startDate, endDate],
-            },
+            endDate: { [Op.between]: [startDate, endDate] }
           },
-        ],
-      },
+          {
+            [Op.and]: [
+              { startDate: { [Op.lte]: startDate } },
+              { endDate: { [Op.gte]: endDate } }
+            ]
+          }
+        ]
+      }
     });
     if (existingBooking) {
       return res.status(403).json({
