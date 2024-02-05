@@ -106,7 +106,12 @@ const fetchUserBookings = async (req, res, next) => {
 
 router.get('/current', requireAuth, fetchUserBookings, (req, res) => {
   const { userBookings } = req;
-  res.status(200).json({ Bookings: userBookings });
+  const sanitizedBookings = userBookings.map(booking => {
+    const { createdAt, updatedAt, ...bookingDetails } = booking;
+    return bookingDetails;
+  });
+
+  res.status(200).json({ Bookings: sanitizedBookings });
 });
 
 router.put("/:bookingId", requireAuth, validDates, async (req, res) => {
@@ -124,7 +129,7 @@ const booking = await Booking.findByPk(bookingId);
   }
 
 const currentDate = new Date();
-const pastStartDate = new Date(booked.startDate);
+const pastStartDate = new Date(booking.startDate);
 if (currentDate > pastStartDate) {
   return res.status(403).json({ message: "Past bookings can't be modified" });
 }

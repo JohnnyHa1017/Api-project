@@ -101,8 +101,13 @@ router.get('/current', requireAuth, fetchUserReviews, async (req, res) => {
       return res.status(403).json({ message: "You are not authorized." });
     };
 
-  res.status(200).json({ Reviews: userReviews });
-});
+    const sanitizedReviews = userReviews.map(review => {
+      const { createdAt, updatedAt, ...reviewDetails } = review;
+      return reviewDetails;
+    });
+
+    res.status(200).json({ Reviews: sanitizedReviews });
+  });
 
 router.post('/:reviewId/images', requireAuth, countAttachedImages, async (req, res) => {
   const { reviewId } = req.params;
