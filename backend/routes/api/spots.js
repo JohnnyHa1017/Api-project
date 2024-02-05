@@ -387,7 +387,7 @@ router.get('/:spotId/reviews',async (req, res) => {
   res.status(200).json({ Reviews: reviewsBySpotId });
 });
 
-router.post('/:spotId/reviews', validateReview, async (req, res) => {
+router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) => {
   const { spotId } = req.params;
   const { review, stars } = req.body
   const userId = req.user.id;
