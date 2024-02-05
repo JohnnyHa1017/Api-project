@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'spotId',
         onDelete: 'CASCADE',
         hooks: true,
-        as: 'previewImage'
       })
 
     }

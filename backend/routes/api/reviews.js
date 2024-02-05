@@ -66,7 +66,6 @@ const fetchUserReviews = async (req, res, next) => {
             {
               model: SpotImage,
               attributes: ['url'],
-              as: 'previewImage',
             }
           ]
         },
@@ -76,12 +75,23 @@ const fetchUserReviews = async (req, res, next) => {
         }
       ]
     });
-    let reviews = [];
-    userReviews.forEach((review) => {
-      reviews.push(review.toJSON())
-    })
+
+    const reviews = [];
+    for (let i = 0; i < userReviews.length; i++) {
+      let json = userReviews[i].toJSON();
+      let spotImages = json.Spot.SpotImages;
+
+      if (spotImages && spotImages.length > 0) {
+        json.Spot.previewImage = spotImages[0].url;
+      } else {
+        json.Spot.previewImage = null;
+      }
+      delete json.Spot.SpotImages;
+      reviews.push(json);
+    }
+
     req.userReviews = reviews;
-    req.userReviews[0].Spot.previewImage = req.userReviews[0].Spot.previewImage[0].url;
+    req.userReviews[0].Spot.previewImage = req.userReviews[0].Spot.previewImage;
     next();
   } catch (error) {
     next(error);
