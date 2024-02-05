@@ -104,7 +104,7 @@ if (maxPrice) {
     if (starsColumn === null) avgRating = 0;
     else avgRating = (starsColumn / reviewsLength).toFixed(1);
 
-    const previewImages = await SpotImage.findAll({
+    const previewImage = await SpotImage.findAll({
       where: {
         spotId: spot.id,
       },
@@ -113,8 +113,8 @@ if (maxPrice) {
 
       let imageSearch;
 
-      if (previewImages.length > 0) {
-        imageSearch = previewImages.find(image => image.url).dataValues.url;
+      if (previewImage.length > 0) {
+        imageSearch = previewImage.find(image => image.url).dataValues.url;
       } else {
         imageSearch = null;
       }
@@ -126,15 +126,15 @@ if (maxPrice) {
       city: spot.city,
       state: spot.state,
       country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
+      lat: parseFloat(spot.lat),
+      lng: parseFloat(spot.lng),
       name: spot.name,
       description: spot.description,
-      price: spot.price,
+      price: parseFloat(spot.price),
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
       avgRating: avgRating,
-      previewImages: imageSearch
+      previewImage: imageSearch
     };
   }));
   req.detailedSpot = detailedSpot;
@@ -169,15 +169,16 @@ const validateSpots = [
   check('lat')
     .isDecimal()
     .exists({ checkFalsy: true })
-    .withMessage("Latitude must be within -90 and 90")
-    .isFloat({ min: -90, max: 90 }),
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude must be within -90 and 90"),
   check('lng')
     .isDecimal()
     .exists({ checkFalsy: true })
-    .withMessage("Longitude must be within -180 and 180")
-    .isFloat({ min: -180, max: 180 }),
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude must be within -180 and 180"),
   check('name')
     .isString()
+    .notEmpty()
     .exists({ checkFalsy: true })
     .withMessage("Name must be less than 50 characters"),
   check('description')
@@ -187,8 +188,8 @@ const validateSpots = [
   check('price')
     .isDecimal()
     .exists({ checkFalsy: true })
-    .withMessage("Price per day must be a positive number")
-    .isFloat({ min: 0 }),
+    .isFloat({ min: 0 })
+    .withMessage("Price per day must be a positive number"),
   handleValidationErrors
 ];
 
@@ -224,7 +225,7 @@ router.get('/:spotId', fetchSpots, async (req, res) => {
         spotId: spotById.id,
       },
       attributes: {
-        exclude: ['createdAt', 'updatedAt'],
+        exclude: ['spotId', 'createdAt', 'updatedAt'],
       },
     });
 
@@ -239,11 +240,11 @@ router.get('/:spotId', fetchSpots, async (req, res) => {
         city: spotById.city,
         state: spotById.state,
         country: spotById.country,
-        lat: spotById.lat,
-        lng: spotById.lng,
+        lat: parseFloat(spotById.lat),
+        lng: parseFloat(spotById.lng),
         name: spotById.name,
         description: spotById.description,
-        price: spotById.price,
+        price: parseFloat(spotById.price),
         createdAt: spotById.createdAt,
         updatedAt: spotById.updatedAt,
         numReviews: relatedReviews.length,
@@ -429,10 +430,10 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) =>
           createdAt: newReview.createdAt,
           updatedAt: newReview.updatedAt
       }
-       res.json(response);
+       res.status(201).json(response);
   }
   catch(error){
-      return res.status(404).json({
+      return res.status(400).json({
           "message": "Bad Request",
           "errors": {
             "review": "Review text is required",
@@ -518,7 +519,7 @@ router.post('/:spotId/bookings', requireAuth, validDates, async (req, res) => {
     }
 
     if (spot.ownerId === currentUser) {
-      return res.status(409).json({ message: 'Unable to Process this Request: This is your property.' });
+      return res.status(403).json({ message: 'Unable to Process this Request: This is your property.' });
     }
 
     const existingBooking = await Booking.findOne({

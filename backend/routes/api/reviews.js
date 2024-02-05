@@ -19,67 +19,76 @@ const validateReview = [
 ];
 
 const fetchUserReviews = async (req, res, next) => {
-  const allSpots = await Spot.findAll({});
-  const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
-  const previewImages = await SpotImage.findAll({
-    where: {
-      spotId: spot.id,
-    },
-       attributes: ["url"],
+  try {
+    const allSpots = await Spot.findAll({});
+    const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
+      const previewImage = await SpotImage.findAll({
+        where: {
+          spotId: spot.id,
+        },
+        attributes: ['url'],
+        limit: 1,
+      });
+
+      const imageSearch = previewImage.length > 0 ? previewImage[0].url : null;
+
+      return {
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        price: spot.price,
+        field: {
+          previewImage: imageSearch,
+        },
+      };
+    }));
+
+    req.detailedSpot = detailedSpot;
+
+    const filteredDetailedSpot = detailedSpot.find(spot => spot.ownerId === req.user.id);
+    req.detailedSpot = filteredDetailedSpot;
+
+    const userReviews = await Review.findAll({
+      where: {
+        userId: req.user.id
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName']
+        },
+        {
+          model: Spot,
+          filteredDetailedSpot,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'description']
+          },
+          include: [
+            {
+              model: SpotImage,
+              attributes: ['url'],
+            }
+          ]
+        },
+        {
+          model: ReviewImage,
+          attributes: ['id', 'url']
+        }
+      ]
     });
 
-    let imageSearch;
-
-    if (previewImages.length > 0) {
-      imageSearch = previewImages.find(image => image.url).dataValues.url;
-    } else {
-      imageSearch = null;
-    }
-
-    return {
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'description'],
-      },
-      id: spot.id,
-      ownerId: spot.ownerId,
-      address: spot.address,
-      city: spot.city,
-      state: spot.state,
-      country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
-      name: spot.name,
-      price: spot.price,
-      previewImage: imageSearch,
-    };
-  }))
-
-  const userReviews = await Review.findAll({
-    where: {
-      userId: req.user.id
-    },
-    include: [
-      {
-        model: User,
-        attributes: ['id', 'firstName', 'lastName']
-      },
-      {
-        model: Spot,
-        ...detailedSpot,
-              attributes: {
-        exclude: ['createdAt', 'updatedAt', 'description']
-      }
-      },
-      {
-        model: ReviewImage,
-        attributes: ['id', 'url']
-      }
-    ]
-  });
-
-  req.userReviews = userReviews;
-  next();
-}
+    req.userReviews = userReviews;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
 
 const countAttachedImages = async (req, res, next) => {
   const { reviewId } = req.params;

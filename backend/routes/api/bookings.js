@@ -50,61 +50,53 @@ const validDates = [
 ];
 
 const fetchUserBookings = async (req, res, next) => {
-  const allSpots = await Spot.findAll({});
-  const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
-  const previewImages = await SpotImage.findAll({
-    where: {
-      spotId: spot.id,
-    },
-       attributes: ["url"],
-    });
-
-    let imageSearch;
-
-    if (previewImages.length > 0) {
-      imageSearch = previewImages.find(image => image.url).dataValues.url;
-    } else {
-      imageSearch = null;
-    }
-
-    return {
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'description'],
-      },
-      id: spot.id,
-      ownerId: spot.ownerId,
-      address: spot.address,
-      city: spot.city,
-      state: spot.state,
-      country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
-      name: spot.name,
-      price: spot.price,
-      previewImage: imageSearch,
-    };
-  }));
-
+  try {
     const userBookings = await Booking.findAll({
       where: {
         userId: req.user.id
       },
       include: [{
-          model: Spot,
-          ...detailedSpot,
-          attributes: {
-    exclude: ['createdAt', 'updatedAt', 'description']
-  }
-    }],
-      startDate: Booking.startDate,
-      endDate: Booking.endDate,
-      createdAt: Booking.createdAt,
-      updatedAt: Booking.updatedAt
+        model: Spot,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'description']
+        },
+        include: [{
+          model: SpotImage,
+          attributes: ['url'],
+          limit: 1,
+        }],
+      }],
     });
 
-    req.userBookings = userBookings;
+    const detailedUserBookings = userBookings.map(booking => ({
+      id: booking.id,
+      spotId: booking.spotId,
+      Spot: {
+        id: booking.Spot.id,
+        ownerId: booking.Spot.ownerId,
+        address: booking.Spot.address,
+        city: booking.Spot.city,
+        state: booking.Spot.state,
+        country: booking.Spot.country,
+        lat: booking.Spot.lat,
+        lng: booking.Spot.lng,
+        name: booking.Spot.name,
+        price: booking.Spot.price,
+        previewImage: booking.Spot.SpotImages.length > 0 ? booking.Spot.SpotImages[0].url : null,
+      },
+      userId: booking.userId,
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
+    }));
+
+    req.userBookings = detailedUserBookings;
     next();
-  };
+  } catch (error) {
+    next(error);
+  }
+};
 
 router.get('/current', requireAuth, fetchUserBookings, (req, res) => {
   const { userBookings } = req;

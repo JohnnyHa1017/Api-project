@@ -57,7 +57,9 @@ router.post(
     if (existingUser) {
       const response = {
         message: "User already exists",
-        errors: {},
+        errors: {
+          "email": "User with that email already exists"
+        },
       };
 
       if (existingUser.email === email) {
