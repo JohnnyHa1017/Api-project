@@ -22,17 +22,16 @@ const fetchUserReviews = async (req, res, next) => {
   try {
     const allSpots = await Spot.findAll({});
     const detailedSpot = await Promise.all(allSpots.map(async (spot) => {
-      const previewImage = await SpotImage.findAll({
+      const previewImage = await SpotImage.findOne({
         where: {
           spotId: spot.id,
         },
         attributes: ['url'],
-        limit: 1,
       });
 
-      const imageSearch = previewImage.length > 0 ? previewImage[0].url : null;
+      const imageSearch = previewImage ? previewImage.url : null;
 
-      return {
+      const response = {
         id: spot.id,
         ownerId: spot.ownerId,
         address: spot.address,
@@ -49,11 +48,6 @@ const fetchUserReviews = async (req, res, next) => {
       };
     }));
 
-    req.detailedSpot = detailedSpot;
-
-    const filteredDetailedSpot = detailedSpot.find(spot => spot.ownerId === req.user.id);
-    req.detailedSpot = filteredDetailedSpot;
-
     const userReviews = await Review.findAll({
       where: {
         userId: req.user.id
@@ -65,14 +59,14 @@ const fetchUserReviews = async (req, res, next) => {
         },
         {
           model: Spot,
-          filteredDetailedSpot,
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'description']
+            exclude: ['createdAt', 'updatedAt', 'description'],
           },
           include: [
             {
               model: SpotImage,
               attributes: ['url'],
+              as: 'previewImage',
             }
           ]
         },
@@ -82,8 +76,12 @@ const fetchUserReviews = async (req, res, next) => {
         }
       ]
     });
-
-    req.userReviews = userReviews;
+    let reviews = [];
+    userReviews.forEach((review) => {
+      reviews.push(review.toJSON())
+    })
+    req.userReviews = reviews;
+    req.userReviews[0].Spot.previewImage = req.userReviews[0].Spot.previewImage[0].url;
     next();
   } catch (error) {
     next(error);
@@ -108,9 +106,9 @@ router.get('/current', requireAuth, fetchUserReviews, async (req, res) => {
   const currentUser = req.user.id;
 
   const unauthorizedReview = userReviews.find(review => review.userId !== currentUser);
-    if (unauthorizedReview) {
-      return res.status(403).json({ message: "You are not authorized." });
-    };
+  if (unauthorizedReview) {
+    return res.status(403).json({ message: "You are not authorized." });
+  }
 
   res.status(200).json({ Reviews: userReviews });
 });
