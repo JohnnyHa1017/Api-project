@@ -172,7 +172,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
     return res.status(200).json(booking);
 });
 
-router.delete("/:bookingId", requireAuth, async (req, res) => {
+router.delete("/:bookingId", requireAuth, validDates, async (req, res) => {
   const { bookingId } = req.params;
   const currentUser = req.user.id;
 
