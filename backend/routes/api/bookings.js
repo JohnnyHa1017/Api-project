@@ -103,7 +103,7 @@ router.get('/current', requireAuth, fetchUserBookings, (req, res) => {
   res.status(200).json({ Bookings: userBookings });
 });
 
-router.put("/:bookingId", requireAuth, validDates, async (req, res) => {
+router.put("/:bookingId", requireAuth, async (req, res) => {
   const { bookingId } = req.params;
   const { startDate, endDate } = req.body;
   const currentUser = req.user.id;
