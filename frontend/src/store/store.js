@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import { thunk as customThunkMiddleware } from 'redux-thunk';
 import sessionReducer from './session';
 
 const rootReducer = combineReducers({
@@ -8,12 +8,11 @@ const rootReducer = combineReducers({
 
 let enhancer;
 if (import.meta.env.MODE === "production") {
-  enhancer = applyMiddleware(thunk);
+  enhancer = applyMiddleware(customThunkMiddleware);
 } else {
   const logger = (await import("redux-logger")).default;
-  const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  enhancer = composeEnhancers(applyMiddleware(thunk, logger));
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  enhancer = composeEnhancers(applyMiddleware(customThunkMiddleware, logger));
 }
 
 const configureStore = (preloadedState) => {
