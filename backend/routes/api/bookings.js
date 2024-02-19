@@ -103,7 +103,7 @@ router.get('/current', requireAuth, fetchUserBookings, (req, res) => {
   res.status(200).json({ Bookings: userBookings });
 });
 
-router.put("/:bookingId", requireAuth, async (req, res) => {
+router.put("/:bookingId", requireAuth, validDates, async (req, res) => {
   const { bookingId } = req.params;
   const { startDate, endDate } = req.body;
   const currentUser = req.user.id;
@@ -144,12 +144,10 @@ if(booked){
     })
 }
 
-  booking.startDate = startDate;
-  booking.endDate = endDate;
-  booking.updatedAt = new Date();
-
-  await booking.save();
-  res.status(200).json(booking);
+booking.startDate = startDate || booking.startDate;
+booking.endDate = endDate || booking.endDate;
+await booking.save();
+return res.status(200).json(booking);
 });
 
 router.delete("/:bookingId", requireAuth, async (req, res) => {
