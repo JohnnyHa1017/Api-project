@@ -6,6 +6,8 @@ import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
+import LandingPage from './components/LandingPage/LandingPage';
+import SpotInfo from './components/SpotInfo/SpotInfo';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -31,16 +33,24 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/',
-        element: <h1>Welcome!</h1>
-      },
-      {
         path: 'login',
         element: <LoginFormPage />
       },
       {
         path: 'signup',
         element: <SignupFormPage />
+      },
+      {
+        path: '/',
+        element: <LandingPage />
+      },
+      {
+        path: 'spots/:spotId',
+        element: <SpotInfo />
+      },
+      {
+        path: '*',
+        element: <h1>Page Not Found</h1>
       }
     ]
   }

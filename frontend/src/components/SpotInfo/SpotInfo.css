@@ -1,0 +1,129 @@
+/* Font Loading */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Shadows+Into+Light&display=swap');
+
+/* General Styles */
+.spot-body {
+  margin: 100px;
+  font-family: "Nanum Pen Script", cursive;
+}
+
+.spot-info {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+/* Right Box Styles */
+.right-box {
+  border: 1px solid #ddd;
+  position: relative;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px;
+  font-family: "Nanum Pen Script", cursive;
+}
+
+/* Rating and Price Styles */
+.rating-price {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Heading Styles */
+h1 {
+  font-family: "Shadows Into Light", cursive;
+}
+
+/* Positioning Styles */
+.positioning {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid;
+}
+
+/* Reserve Button Styles */
+.reserve {
+  background-color: #008cba;
+  color: white;
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.reserve:hover {
+  background-color: #0073a1;
+  transform: scale(1.05);
+}
+
+.reserve:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+/* Large Box Styles */
+.large-box {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Large Spot Image Styles */
+.spot-image-large {
+  box-sizing: border-box;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  width: 800px;
+  height: 500px;
+  object-fit: cover;
+}
+
+/* Image List Styles */
+.image-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+  width: 500px;
+}
+
+/* Small Spot Image Styles */
+.spot-image-small {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styles for Small Screens */
+@media (max-width: 768px) {
+  .large-box {
+    flex-direction: column;
+  }
+
+  .spot-image-large,
+  .image-list {
+    width: 400px;
+    height: 300px;
+  }
+
+  .image-list {
+    display: none;
+  }
+}

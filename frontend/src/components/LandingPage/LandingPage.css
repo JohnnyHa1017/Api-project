@@ -1,0 +1,102 @@
+/* Font Loading */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Shadows+Into+Light&display=swap');
+
+/* General Styles */
+.landing-page,
+.spots-title {
+  font-family: "Shadows Into Light", cursive;
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive Grid */
+.spots-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(300px, 1fr));
+  grid-gap: 50px;
+}
+
+@media (max-width: 1200px) {
+  .spots-list {
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .spots-list {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .spots-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Spot Tile Styles */
+.landing-page .spot-tile {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Tooltip Styles */
+.tooltip {
+  position: relative;
+  text-align: center;
+  background-color: white;
+  font-size: 14px;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 3;
+  margin-bottom: 5px;
+  width: 50%;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.spot-tile:hover .tooltip {
+  visibility: visible;
+  transform: translateX(50%);
+  opacity: 0.5;
+}
+
+/* Spot Image Styles */
+.spot-image {
+  height: 400px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Spot Name Styles */
+.spot-name {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+/* Spot Link Styles */
+.spot-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Spot Info Styles */
+.spot-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Spot Rating Styles */
+.spot-rating {
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
