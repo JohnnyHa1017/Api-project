@@ -33,9 +33,34 @@ const fetchSpots = () => {
 
 const LandingPage = () => {
   const dispatch = useDispatch();
-  const spots = useSelector((state) => state.spots);
+  const spots123 = useSelector((state) => state.spots);
+    console.log(spots123, 'selector')
+    const spots = [{
+      ownerId: 1,
+      address: '923 S. Island Festival',
+      city:'Nia Village',
+      state:'Punika',
+      country:'Arkesia',
+      lat:-34.343432,
+      lng:-120.343432,
+      name: 'Island Resort Getaway',
+      description:'Come dance with the locals and forget all your worries!',
+      price:899.00
+    },
+    {
+      ownerId:2,
+      address: '1226 E. Luterra Cs.',
+      city:'Luterra',
+      state:'Rethmartis',
+      country:'Arkesia',
+      lat:42.34325346,
+      lng:150.33342423,
+      name: 'Castle of your Dreams',
+      description:'Beautiful castle built in the countryside with plenty of local attractions!',
+      price:729.00
+    }]
     console.log('line 37', spots)
-    
+
   useEffect(() => {
     dispatch(fetchSpots());
   }, [dispatch]);
