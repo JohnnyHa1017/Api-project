@@ -82,6 +82,7 @@ import {
   GET_USER_SPOTS,
   UPDATE_SPOT,
   DELETE_SPOTS,
+  FETCH_SPOTS_SUCCESS,
 } from "./spotActions";
 
   // removed spot : null
@@ -89,6 +90,8 @@ const initialState = { spots: [] };
 
 function spotReducer(state = initialState, action) {
   switch (action.type) {
+    case FETCH_SPOTS_SUCCESS:
+        return { ...state, spots: { spots: action.payload }};
     case SET_SPOT:
       return { ...state, spot: action.payload };
     case GET_USER_SPOTS:
