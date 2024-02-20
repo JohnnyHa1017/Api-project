@@ -18,7 +18,6 @@ const fetchSpotsFailure = (error) => ({
 const fetchSpots = () => {
   return async (dispatch) => {
     try {
-      // Figure out why this isnt calling properly
       const response = await fetch("/api/spots");
       const data = await response.json();
       if (data && data.Spots) {

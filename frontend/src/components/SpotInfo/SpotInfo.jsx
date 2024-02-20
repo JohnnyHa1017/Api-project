@@ -16,7 +16,7 @@ function SpotLocation({ spot }) {
 function SpotInfo() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const { spot } = useSelector((state) => state.spots);
+  const spot = useSelector((state) => state.spots.spots).find((x) => x.id === spotId);
 
   useEffect(() => {
     dispatch(fetchSpot(spotId));
