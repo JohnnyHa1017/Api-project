@@ -74,9 +74,8 @@ function Reviews({ spot }) {
 											{`${review.User.firstName}
 								${review.User.lastName}:
 								 ${review.review}
-
-                                 ${monthNames[review.createdAtDate.getMonth()]}
-                                 ${review.createdAtDate.getFullYear()}`}
+                      ${monthNames[review.createdAtDate.getMonth()]}
+                      ${review.createdAtDate.getFullYear()}`}
 										</li>
 										{user && user.id === review.userId ? (
 											<OpenModalButton
