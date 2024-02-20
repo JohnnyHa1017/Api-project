@@ -9,7 +9,7 @@ import * as sessionActions from './store/session';
 import { ModalProvider } from './context/Modal';
 
 const store = configureStore();
-
+  console.log(import.meta, 'line 12 importmeta')
 if (import.meta.env.MODE !== "production") {
   restoreCSRF();
 

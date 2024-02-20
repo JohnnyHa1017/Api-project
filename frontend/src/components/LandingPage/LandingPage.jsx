@@ -34,7 +34,8 @@ const fetchSpots = () => {
 const LandingPage = () => {
   const dispatch = useDispatch();
   const spots = useSelector((state) => state.spots);
-
+    console.log('line 37', spots)
+    
   useEffect(() => {
     dispatch(fetchSpots());
   }, [dispatch]);
