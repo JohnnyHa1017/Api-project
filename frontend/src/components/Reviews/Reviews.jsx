@@ -9,7 +9,6 @@ import "./Reviews.css"
 
 function Reviews({ spot }) {
 	const dispatch = useDispatch();
-	console.log("this is the spot:", spot);
 	const user = useSelector((state) => {
 		console.log(state);
 		return state.session.user;
@@ -30,34 +29,11 @@ function Reviews({ spot }) {
 		"December",
 	];
 	const reviews = useSelector((state) => {
-		// console.log("state in reviews component", state);
 		return state.reviews.reviews;
 	});
 	useEffect(() => {
 		dispatch(getReviews(spot.id));
 	}, [spot.id, dispatch]);
-	// 	const fetchReviews = async () => {
-	// 		try {
-	// 			const response = await fetch(`/api/spots/${spot.id}/reviews`);
-	// 			const data = await response.json();
-	// 			if (data) {
-	// 				setReviews(
-	// 					data.Reviews.map((review) => {
-	// 						return { ...review, createdAtDate: new Date(review.createdAt) };
-	// 					}).sort((review1, review2) => {
-	// 						const firstDate = Date.parse(review1.createdAt);
-	// 						const secondDate = Date.parse(review2.createdAt);
-	// 						const subtractionTotal = secondDate - firstDate;
-	// 						return subtractionTotal;
-	// 					})
-	// 				);
-	// 			}
-	// 		} catch (error) {
-	// 			console.error("Failed to fetch reviews:", error);
-	// 		}
-	// 	};
-	// 	fetchReviews();
-	// }, [spot.id]);
 
 	return (
 		<>
