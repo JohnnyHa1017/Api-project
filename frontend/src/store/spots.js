@@ -89,9 +89,10 @@ import {
 const initialState = { spots: [] };
 
 function spotReducer(state = initialState, action) {
+  console.log(action, 'line 92')
   switch (action.type) {
     case FETCH_SPOTS_SUCCESS:
-        return { ...state, spots: { spots: action.payload }};
+      return { ...state, spots: { spots: action.payload }};
     case SET_SPOT:
       return { ...state, spot: action.payload };
     case GET_USER_SPOTS:
