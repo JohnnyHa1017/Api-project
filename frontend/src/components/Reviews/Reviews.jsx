@@ -10,7 +10,6 @@ import "./Reviews.css"
 function Reviews({ spot }) {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => {
-		console.log(state);
 		return state.session.user;
 	});
 
