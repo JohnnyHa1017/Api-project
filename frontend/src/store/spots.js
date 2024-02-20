@@ -84,7 +84,8 @@ import {
   DELETE_SPOTS,
 } from "./spotActions";
 
-const initialState = { spot: null, spots: [] };
+  // removed spot : null
+const initialState = { spots: [] };
 
 function spotReducer(state = initialState, action) {
   switch (action.type) {
@@ -105,3 +106,4 @@ function spotReducer(state = initialState, action) {
 }
 
 export default spotReducer;
+
