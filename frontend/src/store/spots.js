@@ -6,7 +6,7 @@ export const fetchSpot = async (spotId) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to fetch spot:", error);
+    console.error("Failed to fetch spot");
     throw error;
   }
 };
@@ -31,7 +31,7 @@ export const fetchUpdateSpot = async (spot) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to update spot:", error);
+    console.error("Failed to update spot");
     throw error;
   }
 };
@@ -44,7 +44,7 @@ export const fetchDeleteSpot = async (spotId) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to delete spot:", error);
+    console.error("Failed to delete spot");
     throw error;
   }
 };
@@ -57,7 +57,7 @@ export const fetchGetSpots = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to get spots:", error);
+    console.error("Failed to get spots");
     throw error;
   }
 };
@@ -71,7 +71,7 @@ export const fetchCreateSpot = async (spot) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to create spot:", error);
+    console.error("Failed to create spot");
     throw error;
   }
 };
