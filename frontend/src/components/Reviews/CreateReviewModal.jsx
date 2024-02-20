@@ -25,7 +25,6 @@ function CreateReviewModal({ spot }) {
 			.then(closeModal)
 			.catch(async (response) => {
 				const data = await response.json();
-				console.log(response);
 				if (data?.errors) {
 					setErrors(data.errors);
 				}

@@ -37,7 +37,6 @@ function Reviews({ spot }) {
 
 	return (
 		<>
-			{console.log(reviews)}
 			{reviews !== null ? (
 				<div className="reviews">
 					<h3>Reviews</h3>
