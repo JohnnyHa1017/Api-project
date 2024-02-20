@@ -18,6 +18,7 @@ const fetchSpotsFailure = (error) => ({
 const fetchSpots = () => {
   return async (dispatch) => {
     try {
+      // Figure out why this isnt calling properly
       const response = await fetch("/api/spots");
       const data = await response.json();
 
@@ -34,8 +35,9 @@ const fetchSpots = () => {
 const LandingPage = () => {
   const dispatch = useDispatch();
   const spots = useSelector((state) => {
+      // Figure out why state is null
     console.log(state, 'state')
-    return state.spots
+    return state.spots.spots
 });
 
     // const spots = [{
