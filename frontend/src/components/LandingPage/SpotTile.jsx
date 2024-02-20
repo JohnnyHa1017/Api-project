@@ -1,9 +1,14 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 const SpotTile = ({ spot }) => {
-  const rating = spot.avgRating || spot.avgStars;
-  const displayRating = rating ? parseFloat(rating).toFixed(1) : "New";
+  const [displayRating, setDisplayRating] = useState("New");
+
+  useEffect(() => {
+    const rating = spot.avgRating || spot.avgStars;
+    const formattedRating = rating ? parseFloat(rating).toFixed(1) : "New";
+    setDisplayRating(formattedRating);
+  }, [spot]);
 
   return (
     <NavLink to={`/spots/${spot.id}`} className="spot-link">

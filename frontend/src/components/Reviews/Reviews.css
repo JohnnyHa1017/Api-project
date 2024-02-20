@@ -1,0 +1,150 @@
+/* Font Loading */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Shadows+Into+Light&display=swap');
+
+/* Create Review Form */
+.create-review {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  margin: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.create-review h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #333;
+  font-family: "Shadows Into Light", cursive;
+}
+
+.create-review i {
+  color: #ffc107;
+  cursor: pointer;
+  font-size: 24px;
+  margin: 0 5px;
+}
+
+.create-review i:hover {
+  color: #e6b800;
+}
+
+.create-review textarea {
+  width: calc(100% - 20px);
+  height: 100px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: "Nanum Pen Script", cursive;
+  resize: vertical;
+  align-self: center;
+}
+
+.create-review .error {
+  color: red;
+  font-size: 0.9rem;
+  margin: 5px 0;
+}
+
+.submit-review-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.submit-review-button:hover {
+  background-color: #43a047;
+}
+
+.submit-review-button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: default;
+}
+
+/* Review List Styles */
+ul.review-list button {
+  background-color: #e51e53;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+ul.review-list button:hover {
+  background-color: #c41447;
+}
+
+/* Delete Review Modal Styles */
+.delete-review-modal {
+  font-family: "Shadows Into Light", cursive;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  margin: auto;
+}
+
+.delete-review-modal h3 {
+  color: #e51e53;
+  margin-bottom: 15px;
+}
+
+.delete-review-modal p {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.delete-review-modal .yes-delete,
+.delete-review-modal button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-review-modal .yes-delete:hover,
+.delete-review-modal button:hover {
+  background-color: #43a047;
+}
+
+.delete-review-modal .yes-delete {
+  margin-right: 10px;
+}
+
+/* Reviews Styles */
+.reviews button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+.reviews button:hover {
+  background-color: #43a047;
+}

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Reviews from "../Reviews/Reviews";
-import { fetchOneSpot } from "../../store/spots";
+import { fetchSpot } from "../../store/spots";
 import "./SpotInfo.css";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ function SpotInfo() {
   const { spot } = useSelector((state) => state.spots);
 
   useEffect(() => {
-    dispatch(fetchOneSpot(spotId));
+    dispatch(fetchSpot(spotId));
   }, [spotId, dispatch]);
 
   return spot ? (
