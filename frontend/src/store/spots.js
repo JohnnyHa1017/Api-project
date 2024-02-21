@@ -86,7 +86,7 @@ import {
   FETCH_SPOTS_SUCCESS,
 } from "./spotActions";
 
-const initialState = { /*spot: null,*/ spots: [] };
+const initialState = { spot: null, spots: [] };
 
 function spotReducer(state = initialState, action) {
 

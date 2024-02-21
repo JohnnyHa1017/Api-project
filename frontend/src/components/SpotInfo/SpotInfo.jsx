@@ -16,7 +16,7 @@ function SpotLocation({ spot }) {
 function SpotInfo() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.spot).find((x) => x.id === spotId);
+  const spot = useSelector((state) => state.spots.spot.find((x) => x.id === spotId));
     console.log(spot, 'spotinfo.js line 20')
 
   useEffect(() => {
@@ -27,7 +27,6 @@ function SpotInfo() {
     <div className="spot-body">
       <h1>{spot.name}</h1>
       <SpotLocation spot={spot} />
-
       <div className="large-box">
         <div className="large-picture">
           {spot.SpotImages?.length >= 1 && (
