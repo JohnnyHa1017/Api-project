@@ -4,7 +4,11 @@ export const fetchSpot = async (spotId) => {
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`, { method: "GET" });
     const data = await response.json();
-    return data;
+
+  if(data && data.spotId){
+    dispatch(getSpot(spotId))
+  }
+
   } catch (error) {
     console.error("Failed to fetch spot");
     throw error;
@@ -83,9 +87,10 @@ import {
   UPDATE_SPOT,
   DELETE_SPOTS,
   FETCH_SPOTS_SUCCESS,
+  getSpot,
 } from "./spotActions";
 
-const initialState = { spots: [] };
+const initialState = { spot: null, spots: [] };
 
 function spotReducer(state = initialState, action) {
 
@@ -93,11 +98,11 @@ function spotReducer(state = initialState, action) {
     case FETCH_SPOTS_SUCCESS:
       return { ...state, spots: action.payload };
     case SET_SPOT:
-      return { ...state, spots: action.payload };
+      return { ...state, spot: action.payload };
     case GET_USER_SPOTS:
       return { ...state, spots: action.payload };
     case UPDATE_SPOT:
-      return { ...state, spots: action.payload };
+      return { ...state, spot: action.payload };
     case DELETE_SPOTS:
       return {
         ...state,
