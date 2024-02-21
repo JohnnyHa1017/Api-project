@@ -4,11 +4,7 @@ export const fetchSpot = async (spotId) => {
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`, { method: "GET" });
     const data = await response.json();
-
-  if(data && data.spotId){
-    dispatch(getSpot(spotId))
-  }
-
+    return data.spot;
   } catch (error) {
     console.error("Failed to fetch spot");
     throw error;
@@ -87,7 +83,6 @@ import {
   UPDATE_SPOT,
   DELETE_SPOTS,
   FETCH_SPOTS_SUCCESS,
-  getSpot,
 } from "./spotActions";
 
 const initialState = { spot: null, spots: [] };

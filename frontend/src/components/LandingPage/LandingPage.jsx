@@ -32,7 +32,7 @@ const fetchSpots = () => {
 
 const LandingPage = () => {
   const dispatch = useDispatch();
-  const spots = useSelector((state) => state.spots.spots);
+  const spots = useSelector((state) => state.spots.spot);
 
   useEffect(() => {
     dispatch(fetchSpots());
