@@ -4,6 +4,7 @@ export const fetchSpot = async (spotId) => {
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`, { method: "GET" });
     const data = await response.json();
+    console.log(data.spot, 'spots.js line 7')
     return data.spot;
   } catch (error) {
     console.error("Failed to fetch spot");
