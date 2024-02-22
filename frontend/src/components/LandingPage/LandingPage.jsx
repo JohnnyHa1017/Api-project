@@ -20,7 +20,7 @@ export const FETCH_SPOTS_FAILURE = "FETCH_SPOTS_FAILURE";
 const fetchSpots = () => {
   return async (dispatch) => {
     try {
-      const response = await csrfFetch("api/spots", {
+      const response = await fetch ("api/spots", {
         method: "GET"
       });
       const data = await response.json();

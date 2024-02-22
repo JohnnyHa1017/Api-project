@@ -43,6 +43,18 @@ function CreateSpotForm({ title, spot = null }) {
     }
   };
 
+	const validateImgURL = function (imageUrl) {
+		if (
+			imageUrl.slice(-3) !== "png" &&
+			imageUrl.slice(-4) !== "jpeg" &&
+			imageUrl.slice(-3) !== "jpg"
+		) {
+			return "Image URL must end in .png, .jpeg, .jpg";
+		} else {
+			return undefined;
+		}
+	};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {
