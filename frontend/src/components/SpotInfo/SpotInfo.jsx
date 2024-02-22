@@ -16,12 +16,13 @@ function SpotLocation({ spot }) {
 function SpotInfo() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.spot.find((x) => x.id === spotId));
-    console.log(spot, 'spotinfo.js line 20')
+  const spot = useSelector((state) => state.spots.spot);
 
   useEffect(() => {
     dispatch(fetchSpot(spotId));
   }, [spotId, dispatch]);
+
+  const avgStarRatingAsNumber = parseFloat(spot?.avgStarRating);
 
   return spot ? (
     <div className="spot-body">
@@ -57,18 +58,18 @@ function SpotInfo() {
           <p>{spot.description}</p>
         </div>
         <div className="right-box">
-          <div className="rating-price">
-            <p className="star-rating">
-              <i className="fas fa-star"></i>
-              {!spot.numReviews ? "New" : spot.avgStarRating.toFixed(1)}
-              {spot.numReviews === 0
-                ? ""
-                : spot.numReviews === 1
-                ? `·${spot.numReviews} Review`
-                : `·${spot.numReviews} Reviews`}
-            </p>
-            <p className="spot-price-single">{`$${spot.price} / night`}</p>
-          </div>
+        <div className="rating-price">
+        <p className="star-rating">
+          <i className="fas fa-star"></i>
+          {!isNaN(avgStarRatingAsNumber) ? avgStarRatingAsNumber.toFixed(1) : "New"}
+          {spot.numReviews === 0
+            ? ""
+            : spot.numReviews === 1
+            ? `·${spot.numReviews} Review`
+            : `·${spot.numReviews} Reviews`}
+        </p>
+        <p className="spot-price-single">{`$${spot.price} / night`}</p>
+      </div>
           <button
             className="reserve"
             onClick={() => alert("Reservation feature is currently under development. Please check back later.")}

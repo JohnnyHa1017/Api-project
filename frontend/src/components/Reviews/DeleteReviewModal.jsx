@@ -2,6 +2,7 @@ import { useModal } from "../../context/Modal";
 import { deleteUserReview } from "../../store/review";
 import { useDispatch } from "react-redux";
 import "./Reviews.css"
+
 function DeleteReviewModal({ reviewId,spotId }) {
 	const dispatch = useDispatch();
 	const { closeModal } = useModal();
