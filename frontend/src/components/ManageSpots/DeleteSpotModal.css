@@ -1,0 +1,58 @@
+/* Styles for the delete-spot-modal container */
+.delete-spot-modal {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  margin: auto;
+}
+
+/* Styles for the heading (h3) within delete-spot-modal */
+.delete-spot-modal h3 {
+  color: #e51e53;
+  margin-bottom: 15px;
+}
+
+/* Styles for paragraphs within delete-spot-modal */
+.delete-spot-modal p {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Styles for general buttons within delete-spot-modal */
+.delete-spot-modal button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: lightgray;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 5px;
+  transition: background-color 0.3s;
+}
+
+/* Hover effect for general buttons within delete-spot-modal */
+.delete-spot-modal button:hover {
+  background-color: rgb(60, 207, 134);
+}
+
+/* Styles for specific button with class 'yes-delete' */
+.yes-delete {
+  background-color: #e51e53;
+  color: white;
+}
+
+/* Styles for the third button within delete-spot-modal */
+.delete-spot-modal button:nth-child(3) {
+  color: white;
+}
+
+/* Styles for the specific button with class 'yes-delete' */
+button.yes-delete {
+  background-color: #cb1548;
+}
+
+/* Hover effect for the specific button with class 'yes-delete' */
+button.yes-delete:hover {
+  background-color: #b81040;
+}

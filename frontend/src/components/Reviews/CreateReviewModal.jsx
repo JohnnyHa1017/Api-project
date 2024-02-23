@@ -40,7 +40,7 @@ function CreateReviewModal({ spot }) {
 			<form className='submit-review' onSubmit={handleSubmit}>
 				<textarea
 					value={review}
-					placeholder='leave your review here...'
+					placeholder='Leave your review here...'
 					onChange={(e) => setReview(e.target.value)}
 				></textarea>
 				{fiveStars.map((num) => (

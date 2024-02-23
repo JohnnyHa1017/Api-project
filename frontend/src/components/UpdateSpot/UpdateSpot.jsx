@@ -7,9 +7,11 @@ import { useSelector, useDispatch } from "react-redux";
 const UpdateSpot = () => {
 	const dispatch = useDispatch();
 	const { spotId } = useParams();
+
 	const spot = useSelector((state) => {
 		return state.spots.spot;
 	});
+	
 	useEffect(() => {
 		dispatch(fetchSpot(spotId));
 	}, [dispatch, spotId]);

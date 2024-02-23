@@ -7,8 +7,8 @@ import { Modal } from './context/Modal';
 import LandingPage from './components/LandingPage/LandingPage';
 import SpotInfo from './components/SpotInfo/SpotInfo';
 import CreateSpotForm from "./components/CreateSpot/CreateSpotForm";
+import ManageSpots from "./components/ManageSpots/ManageSpots";
 import UpdateSpot from "./components/UpdateSpot/UpdateSpot";
-// import ManageSpots from "./components/ManageSpots/ManageSpots";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -49,10 +49,13 @@ const router = createBrowserRouter([
 				element: <CreateSpotForm title="Create Spot" />,
 			},
 			{ index: true,
+				path: "/spots/current",
+				element: <ManageSpots />
+			},
+			{ index: true,
         path: "/spots/:spotId/edit",
         element: <UpdateSpot />
       },
-			// { index: true, path: "/spots/current", element: <ManageSpots /> },
 			{
 				path: "*",
 				element: <h1>Page Not Found</h1>,

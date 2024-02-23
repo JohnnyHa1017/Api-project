@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as spotActions from "../../store/spots";
-import "./CreateSpotForm.css";
+import "./CreateSpot.css";
 
 function CreateSpotForm({ title, spot = null }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [country, setCountry] = useState(spot?.country ?? "");
   const [address, setAddress] = useState(spot?.address ?? "");
   const [city, setCity] = useState(spot?.city ?? "");
@@ -17,14 +18,13 @@ function CreateSpotForm({ title, spot = null }) {
   const [name, setName] = useState(spot?.name ?? "");
   const [price, setPrice] = useState(spot?.price ?? "");
   const oldPreview = spot?.SpotImages.find((image) => image.preview === true);
-  const [previewImage, setPreviewImage] = useState(
-    spot?.previewImage ?? oldPreview?.url ?? ""
-  );
-  const falseImageArray = spot?.SpotImages.filter((image) => image.preview === false);
-  const [image2, setImage2] = useState(falseImageArray[0]?.url ?? "");
-  const [image3, setImage3] = useState(falseImageArray[1]?.url ?? "");
-  const [image4, setImage4] = useState(falseImageArray[2]?.url ?? "");
-  const [image5, setImage5] = useState(falseImageArray[3]?.url ?? "");
+  const [previewImage, setPreviewImage] = useState(spot?.previewImage ?? oldPreview?.url ?? "");
+
+	const falseImage = spot === null ? [] : spot.SpotImages.filter((image) => image.preview === false);
+	const [image2, setImage2] = useState(falseImage.length > 0 ? falseImage[0].url : "");
+	const [image3, setImage3] = useState(falseImage.length > 1 ? falseImage[1].url : "");
+	const [image4, setImage4] = useState(falseImage.length > 2 ? falseImage[2].url : "");
+	const [image5, setImage5] = useState(falseImage.length > 3 ? falseImage[3].url : "");
   const [errors, setErrors] = useState({});
 
   const validateLng = function (lng) {
@@ -84,66 +84,64 @@ function CreateSpotForm({ title, spot = null }) {
 
     setErrors(newErrors);
 
-    if (Object.values(newErrors).every((value) => value === undefined)) {
-      try {
-        const createdSpot = spot === null
-          ? await dispatch(
-            spotActions.createSpot({
-              country,
-              address,
-              city,
-              state,
-              lat,
-              lng,
-              description,
-              name,
-              price,
-              previewImage,
-              image2,
-              image3,
-              image4,
-              image5,
-            })
-          )
-          : await dispatch(
-            spotActions.updateSpot(
-              {
-                id: spot.id,
-                country,
-                address,
-                city,
-                state,
-                lat,
-                lng,
-                description,
-                name,
-                price,
-                previewImage,
-                image2,
-                image3,
-                image4,
-                image5,
-              },
-              spot
-            )
-          );
-
-        navigate(`/spots/${createdSpot.id}`);
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
-    }
-  };
+					if (Object.values(newErrors).every((value) => value === undefined)) {
+						try {
+							if (spot === null) {
+								const createdSpot = dispatch(
+									spotActions.spotCreated({
+										country,
+										address,
+										city,
+										state,
+										lat,
+										lng,
+										description,
+										name,
+										price,
+										previewImage,
+										image2,
+										image3,
+										image4,
+										image5,
+									}, spot));
+									navigate(`/spots/${createdSpot.id}`);
+							} else {
+								const updatedSpot = dispatch(
+									spotActions.updateSpot(
+										{
+											id: spot.id,
+											country,
+											address,
+											city,
+											state,
+											lat,
+											lng,
+											description,
+											name,
+											price,
+											previewImage,
+											image2,
+											image3,
+											image4,
+											image5,
+									}, spot));
+							navigate(`/spots/${updatedSpot.id}`);
+						}
+					} catch (error) {
+						console.error("Error occurred:", error);
+					}
+				}
+			};
 
   return (
 		<form className="create-spot-form" onSubmit={handleSubmit}>
 			<h2>{title} </h2>
 			<h3> Where&apos;s your place located?</h3>
 			<p>
-				Guests will only get your exact location once they booked a reservation
+				Guests will only get your exact location once they have booked a reservation
 			</p>
 			<div className="create-form">
-				<label htmlFor="name">Country </label>
+				<label htmlFor="name">Country : </label>
 				<input
 					type="text"
 					value={country}
@@ -154,7 +152,7 @@ function CreateSpotForm({ title, spot = null }) {
 				{errors.country && <p className="error-messages">{errors.country}</p>}
 			</div>
 			<div className="create-form">
-				<label htmlFor="name">Street Address </label>
+				<label htmlFor="name">Street Address : </label>
 				<input
 					type="text"
 					value={address}
@@ -165,7 +163,7 @@ function CreateSpotForm({ title, spot = null }) {
 				{errors.address && <p className="error-messages">{errors.address}</p>}
 			</div>
 			<div className="create-form">
-				<label htmlFor="name">City </label>
+				<label htmlFor="name">City : </label>
 				<input
 					type="text"
 					value={city}
@@ -176,7 +174,7 @@ function CreateSpotForm({ title, spot = null }) {
 				{errors.city && <p className="error-messages">{errors.city}</p>}
 			</div>
 			<div className="create-form">
-				<label htmlFor="name">State </label>
+				<label htmlFor="name">State : </label>
 				<input
 					type="text"
 					value={state}
@@ -187,31 +185,30 @@ function CreateSpotForm({ title, spot = null }) {
 				{errors.state && <p className="error-messages">{errors.state}</p>}
 			</div>
 			<div className="create-form">
-				<label htmlFor="name">lat </label>
+				<label htmlFor="name">Latitude : </label>
 				<input
 					type="number"
 					value={lat}
 					name="lat"
-					placeholder="lat"
+					placeholder="Latitude"
 					onChange={(e) => setLat(e.target.value)}
 				></input>
 				{errors.lat && <p className="error-messages">{errors.lat}</p>}
 			</div>
 			<div className="create-form">
-				<label htmlFor="name">lng </label>
+				<label htmlFor="name">Longitude : </label>
 				<input
 					type="number"
 					value={lng}
 					name="lng"
-					placeholder="lng"
+					placeholder="Longitude"
 					onChange={(e) => setLng(e.target.value)}
 				></input>
 				{errors.lng && <p className="error-messages">{errors.lng}</p>}
 			</div>
 			<h3>Describe your place to your guests</h3>
 			<p>
-				Mention the best features of your space, any special amenities like fast
-				wifi or parking, and what you love about the neighborhood
+			Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood.
 			</p>
 			<div className="description">
 				<textarea
@@ -225,8 +222,7 @@ function CreateSpotForm({ title, spot = null }) {
 			</div>
 			<h3>Create a title for your spot</h3>
 			<p>
-				Catch guests&apos; attention with a spot title that highlights what
-				makes your place special
+				Catch guests&apos; attention with a spot title that highlights what makes your place special
 			</p>
 			<div className="spot-name">
 				<input
@@ -240,11 +236,9 @@ function CreateSpotForm({ title, spot = null }) {
 			</div>
 			<h3> Set a base price for your spot</h3>
 			<p>
-				competitive pricing can help your listing stand out and rank higher in
-				search results
+			Competitive pricing can help your listing stand out and rank higher in search results.
 			</p>
 			<div className="price">
-				$
 				<input
 					type="number"
 					value={price}
@@ -257,7 +251,7 @@ function CreateSpotForm({ title, spot = null }) {
 
 			<h3>Liven up your spot with photos</h3>
 			{spot === null ? (
-				<p>Submit a link at least one photo to publish your spot</p>
+				<p>Submit a link to at least one photo to publish your spot.</p>
 			) : (
 				<p> Have some new picture to add?</p>
 			)}
@@ -317,11 +311,8 @@ function CreateSpotForm({ title, spot = null }) {
 				</div>
 			</div>
 
-			{spot === null ? (
-				<button>Create Spot</button>
-			) : (
-				<button>Update Your Spot</button>
-			)}
+			<button>{spot === null ? "Create Spot" : "Update Your Spot"}</button>
+
 		</form>
 	);
 }
