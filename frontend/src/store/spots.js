@@ -67,7 +67,7 @@ export const getUserSpots = () => async (dispatch) => {
     }
 
 		const data = await response.json();
-			dispatch(userSpots(data.Spots));
+			dispatch(userSpots(data));
 
     return data;
 	} catch (error) {
@@ -214,11 +214,12 @@ export const fetchDeleteSpot = (spotId) => async (dispatch) => {
 const initialState = { spot: null, spots: [] };
 
   function spotReducer(state = initialState, action) {
+
     switch (action.type) {
       case FETCH_SPOTS_SUCCESS:
         return { ...state, spots: action.payload };
       case CREATE_UPDATE_SPOT:
-        return { ...state, spots: [...state.spots, action.payload] };
+        return { ...state, spots: action.payload };
       case RETRIEVE_SPOT:
         return { ...state, spot: action.payload };
       case GET_USER_SPOTS:

@@ -11,21 +11,42 @@ const ManageSpots = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Get the spots array from the Redux store
-  const spots = useSelector((state) => state.spots.spots);
+  // Get the user from the Redux store
+  const user = useSelector((state) => state.session.user);
+  const userId = user.id;
 
-  // Fetch Current Users Spots
+  // Fetch Current Users Spots and All Spots
   useEffect(() => {
-    dispatch(userSpots());
-  }, [dispatch]);
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/spots/current");
+        const data = await response.json();
+
+        if (response.ok) {
+          dispatch(userSpots(data.Spots));
+        }
+
+      } catch (error) {
+        console.error("Error fetching spots:", error);
+      }
+    };
+    fetchData();
+  }, [dispatch, userId]);
+
+// Get the spots array from the Redux store
+const spots = useSelector((state) => state.spots.spots);
+let spotArr = Object.values(spots)
+spotArr = spotArr.filter(spot => spot.ownerId == userId)
 
   return (
     <div className="large-boxes">
       <div className="user-spots">
         <h1>Manage Spots</h1>
-        {spots && spots.length >= 1 ? (
+        {
+        spotArr.length >= 1 ? (
           <div className="user-spots-list">
-            {spots.map((spot) => (
+            {
+            spotArr.map((spot) => (
               <div key={spot.id}>
                 <SpotTile spot={spot} />
                 <div className="button-list">
@@ -56,3 +77,5 @@ const ManageSpots = () => {
 };
 
 export default ManageSpots;
+
+
