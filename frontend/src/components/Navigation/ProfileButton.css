@@ -20,6 +20,11 @@ ul.profile-dropdown {
   padding: 12px 16px;
   list-style: none;
   z-index: 2;
+  left: 0;
+  font-size: small;
+  overflow-y: auto;
+  max-height: 200px;
+  white-space: nowrap;
 }
 
 /* Styles for dropdown list items */

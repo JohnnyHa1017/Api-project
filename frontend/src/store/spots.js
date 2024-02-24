@@ -115,7 +115,8 @@ export const fetchUpdateSpot = (spot, spotPrior) => async (dispatch) => {
   } = spot;
 
   try {
-    const response = await csrfFetch(`/api/spots/${spot.id}/`, {
+    if (spot.id) {
+      const response = await csrfFetch(`/api/spots/${spot.id}/`, {
       method: "PUT",
       body: JSON.stringify({
         country,
@@ -135,10 +136,14 @@ export const fetchUpdateSpot = (spot, spotPrior) => async (dispatch) => {
       }),
     });
 
-    const data = await response.json();
-    if (data) {
-      dispatch(updateSpot(data));
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Failed to update spot:", errorData.message);
+      throw new Error(errorData.message);
     }
+
+    const data = await response.json();
+    dispatch(updateSpot({ ...spot, ...data }));
 
     if (previewImage) {
       await deleteSpotImages(spotPrior.SpotImages);
@@ -151,6 +156,9 @@ export const fetchUpdateSpot = (spot, spotPrior) => async (dispatch) => {
     );
 
     return data;
+  } else {
+    return null;
+  }
   } catch (error) {
     console.error("Failed to update spot", error);
     throw error;

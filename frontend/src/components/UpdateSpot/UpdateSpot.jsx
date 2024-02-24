@@ -8,17 +8,17 @@ const UpdateSpot = () => {
 	const dispatch = useDispatch();
 	const { spotId } = useParams();
 
-	const spot = useSelector((state) => {
-		return state.spots.spot;
-	});
-	
+	const spot = useSelector((state) => state.spots.spot);
+
 	useEffect(() => {
 		dispatch(fetchSpot(spotId));
 	}, [dispatch, spotId]);
 
-	return spot === null || spot.id.toString() !== spotId ? (
-		<h3>Loading</h3>
-	) : (
+	if (!spot || spot.id.toString() !== spotId) {
+		return <h3>Loading</h3>;
+	}
+
+	return (
 		<>
 			<h1> Update Spot </h1>
 			<CreateSpotForm title="Update Form" spot={spot} />

@@ -75,9 +75,14 @@
   color: rgb(255, 255, 255);
   padding: 10px 15px;
   cursor: pointer;
-  font-size: 2rem;
+  font-size: 1.33rem;
   background-color: #43a047;
   transition: background-color 0.3s;
+  font-family: "Shadows Into Light", cursive;
+  font-weight: 400;
+  font-style: normal;
+  border: #6d6d6dc7 2px solid;
+  border-radius: 5px;
 }
 
 /* Hover effect for the button */
