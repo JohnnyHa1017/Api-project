@@ -201,11 +201,11 @@ export const fetchDeleteSpot = (spotId) => async (dispatch) => {
       console.error("Failed to delete spot. Server returned:", response.status, response.statusText);
     }
 
-  const data = await response.json();
-    dispatch(deleteSpot(data));
-    dispatch(fetchSpot(data))
-
-    return data;
+		const data = await response.json();
+		if (data) {
+			dispatch(deleteSpot(spotId));
+		}
+    
   } catch (error) {
     console.error("Failed to delete spot", error);
   }

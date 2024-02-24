@@ -35,8 +35,8 @@ const ManageSpots = () => {
 
 // Get the spots array from the Redux store
 const spots = useSelector((state) => state.spots.spots);
-let spotArr = Object.values(spots)
-spotArr = spotArr.filter(spot => spot.ownerId == userId)
+  let spotArr = Object.values(spots)
+  spotArr = spotArr.filter(spot => spot.ownerId == userId)
 
   return (
     <div className="large-boxes">
