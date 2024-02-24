@@ -2,17 +2,19 @@ import { csrfFetch } from "./csrf";
 
 // Action Types
 const FETCH_SPOTS_SUCCESS = "FETCH_SPOTS_SUCCESS";
+const CREATE_UPDATE_SPOT = "CREATE_UPDATE_SPOT";
 const RETRIEVE_SPOT = "RETRIEVE_SPOT";
-const SPOT_CREATED = "SPOT_CREATED";
+const GET_USER_SPOTS = "GET_USER_SPOTS";
 const UPDATE_SPOT = "UPDATE_SPOT";
 const DELETE_SPOTS = "DELETE_SPOTS";
 
 // Action Creators
 export const fetchSpotsSuccess = (spots) => ({ type: FETCH_SPOTS_SUCCESS, payload: spots });
-export const getSpot = (spot) => ({ type: RETRIEVE_SPOT, spot });
+export const createUpdateSpot = (spot) => ({ type: CREATE_UPDATE_SPOT, payload: spot });
+export const getSpot = (spot) => ({ type: RETRIEVE_SPOT, payload: spot });
+export const userSpots = (spots) => ({ type: GET_USER_SPOTS, payload: spots })
 export const updateSpot = (spot) => ({ type: UPDATE_SPOT, payload: spot });
 export const deleteSpot = (spotId) => ({ type: DELETE_SPOTS, spotId: spotId });
-export const spotCreated = (spot) => ({ type: SPOT_CREATED, payload: spot });
 
 // Fetch All Spots Thunk
 export const fetchSpots = () => async (dispatch) => {
@@ -20,10 +22,15 @@ export const fetchSpots = () => async (dispatch) => {
 		const response = await fetch("api/spots", {
 			method: "GET",
 		});
-    const data = await response.json();
-    if (data && data.Spots) {
-      dispatch(fetchSpotsSuccess(data.Spots));
+
+    if (!response.ok) {
+      console.error("Failed to fetch spots. Server returned:", response.status, response.statusText);
     }
+
+    const data = await response.json();
+      dispatch(fetchSpotsSuccess(data));
+
+    return data;
     } catch (error) {
       console.error("Failed to fetch spots:", error);
     }
@@ -35,12 +42,37 @@ export const fetchSpot = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "GET",
     });
+
+    if (!response.ok) {
+      console.error("Failed to fetch spot. Server returned:", response.status, response.statusText);
+    }
+
     const data = await response.json();
       dispatch(getSpot(data));
-      return data;
+
   } catch (error) {
     console.error("Failed to fetch spot:", error);
   }
+};
+
+// Fetch Current Users Spots Thunk
+export const getUserSpots = () => async (dispatch) => {
+	try {
+		const response = await fetch(`/api/spots/current`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch session. Server returned:", response.status, response.statusText);
+    }
+
+		const data = await response.json();
+			dispatch(userSpots(data.Spots));
+
+    return data;
+	} catch (error) {
+		console.error("Failed to fetch spots");
+	}
 };
 
 // Fetch Create Spot Thunk
@@ -56,7 +88,7 @@ export const fetchCreateSpot = (spot, images) => async (dispatch) => {
     }
 
     const data = await response.json();
-      dispatch(getSpot(data.id));
+    dispatch(createUpdateSpot(data));
 
     if (images && images.length > 0) {
       for (const imageUrl of images) {
@@ -70,6 +102,7 @@ export const fetchCreateSpot = (spot, images) => async (dispatch) => {
   }
 };
 
+// Middleware Helperfunctions to Handle Images
 const deleteSpotImages = async (images) => {
   const deleteRequests = await images.map((image) =>
     csrfFetch(`/api/spot-images/${image.id}`, {
@@ -133,7 +166,6 @@ export const fetchUpdateSpot = (spot, spotPrior) => async (dispatch) => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Failed to update spot:", errorData.message);
-      throw new Error(errorData.message);
     }
 
     const data = await response.json();
@@ -151,12 +183,10 @@ export const fetchUpdateSpot = (spot, spotPrior) => async (dispatch) => {
 
     return data;
   } else {
-
     return null;
   }
   } catch (error) {
     console.error("Failed to update spot", error);
-    throw new Error("Failed to update spot.");
   }
 };
 
@@ -172,23 +202,29 @@ export const fetchDeleteSpot = (spotId) => async (dispatch) => {
     }
 
   const data = await response.json();
-    return dispatch(deleteSpot(data));
+    dispatch(deleteSpot(data));
+    dispatch(fetchSpot(data))
 
+    return data;
   } catch (error) {
     console.error("Failed to delete spot", error);
   }
 };
 
-const initialState = { spots: [] };
+const initialState = { spot: null, spots: [] };
 
   function spotReducer(state = initialState, action) {
     switch (action.type) {
       case FETCH_SPOTS_SUCCESS:
         return { ...state, spots: action.payload };
+      case CREATE_UPDATE_SPOT:
+        return { ...state, spots: [...state.spots, action.payload] };
       case RETRIEVE_SPOT:
-        return { ...state, [action.spot.id]: action.spot };
-        case UPDATE_SPOT:
-          return { ...state, spots: action.payload };
+        return { ...state, spot: action.payload };
+      case GET_USER_SPOTS:
+        return { ...state, spots: action.payload };
+      case UPDATE_SPOT:
+        return { ...state, spot: action.payload };
       case DELETE_SPOTS:
         return {
           ...state,

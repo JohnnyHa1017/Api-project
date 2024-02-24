@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import Reviews from "../Reviews/Reviews";
 import { fetchSpot } from "../../store/spots";
-import "./SpotInfo.css";
 import { useDispatch, useSelector } from "react-redux";
+import Reviews from "../Reviews/Reviews";
+import "./SpotInfo.css";
 
 function SpotLocation({ spot }) {
   return (
@@ -16,11 +16,12 @@ function SpotLocation({ spot }) {
 function SpotInfo() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
+
   const spot = useSelector((state) => state.spots.spot);
 
-  useEffect(() => {
-    dispatch(fetchSpot(spotId));
-  }, [spotId, dispatch]);
+	useEffect(() => {
+		dispatch(fetchSpot(spotId));
+	}, [dispatch, spotId]);
 
   const avgStarRatingAsNumber = parseFloat(spot?.avgStarRating);
 
@@ -82,7 +83,7 @@ function SpotInfo() {
       <Reviews spot={spot} />
     </div>
   ) : (
-    <div>Loading</div>
+    <div>Loading...</div>
   );
 }
 

@@ -11,7 +11,7 @@ const DeleteSpotModal = ({ spotId }) => {
 		e.preventDefault();
 
 		try {
-			await dispatch(deleteSpot(spotId));
+			dispatch(deleteSpot(spotId));
 			closeModal();
 		} catch (error) {
 			console.error("Error deleting spot:", error);
