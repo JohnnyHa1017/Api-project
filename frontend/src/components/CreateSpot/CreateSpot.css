@@ -72,16 +72,11 @@
 
 /* Button styles */
 .create-spot-form button {
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 2rem;
   background-color: #43a047;
-  font-family: "Nanum Pen Script", cursive;
-  font-weight: 400;
-  font-style: normal;
   transition: background-color 0.3s;
 }
 

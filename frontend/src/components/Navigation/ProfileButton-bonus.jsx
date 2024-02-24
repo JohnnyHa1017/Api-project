@@ -72,16 +72,16 @@ function ProfileButton({ user }) {
     </>
   );
 
+  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+
   return (
     <div className="profile-elements">
       <button className="profile-button" onClick={toggleMenu}>
-        {user && <i className="fas fa-user-circle fa-2xl" />}
+        <i className="fas fa-user-circle fa-2xl" />
       </button>
-      {showMenu && (
-        <ul className="profile-dropdown" ref={ulRef}>
-          {user ? renderAuthenticatedContent() : renderGuestContent()}
-        </ul>
-      )}
+      <ul className={ulClassName} ref={ulRef}>
+        {user ? renderAuthenticatedContent() : renderGuestContent()}
+      </ul>
     </div>
   );
 }

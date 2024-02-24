@@ -34,7 +34,7 @@ const ManageSpots = () => {
 
   let spotArr = Object.values(spots);
   spotArr = spotArr.filter(spot => spot.ownerId == userId);
-
+  
   return (
     <div className="large-boxes">
       <div className="user-spots">
@@ -72,5 +72,3 @@ const ManageSpots = () => {
 };
 
 export default ManageSpots;
-
-

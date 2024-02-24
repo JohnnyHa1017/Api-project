@@ -21,10 +21,12 @@ function CreateSpotForm({ title, spot = null }) {
   const [previewImage, setPreviewImage] = useState(spot?.previewImage ?? oldPreview?.url ?? "");
 
 	const falseImage = spot === null ? [] : spot.SpotImages.filter((image) => image.preview === false);
+
 	const [image2, setImage2] = useState(falseImage.length > 0 ? falseImage[0].url : "");
 	const [image3, setImage3] = useState(falseImage.length > 1 ? falseImage[1].url : "");
 	const [image4, setImage4] = useState(falseImage.length > 2 ? falseImage[2].url : "");
 	const [image5, setImage5] = useState(falseImage.length > 3 ? falseImage[3].url : "");
+
   const [errors, setErrors] = useState({});
 
   const validateLng = function (lng) {

@@ -2,14 +2,14 @@ import { csrfFetch } from "./csrf";
 
 // Action Types
 const FETCH_SPOTS_SUCCESS = "FETCH_SPOTS_SUCCESS";
-const GET_SPOT = "spots/getSpot";
-const SPOT_CREATED = "spots/spotCreated";
-const UPDATE_SPOT = "spots/updateSpot";
-const DELETE_SPOTS = "spots/deleteSpot";
+const RETRIEVE_SPOT = "RETRIEVE_SPOT";
+const SPOT_CREATED = "SPOT_CREATED";
+const UPDATE_SPOT = "UPDATE_SPOT";
+const DELETE_SPOTS = "DELETE_SPOTS";
 
 // Action Creators
 export const fetchSpotsSuccess = (spots) => ({ type: FETCH_SPOTS_SUCCESS, payload: spots });
-export const getSpot = (spot) => ({ type: GET_SPOT, payload: spot });
+export const getSpot = (spot) => ({ type: RETRIEVE_SPOT, payload: spot });
 export const spotCreated = (spot) => ({ type: SPOT_CREATED, payload: spot });
 export const updateSpot = (spot) => ({ type: UPDATE_SPOT, payload: spot });
 export const deleteSpot = (spotId) => ({ type: DELETE_SPOTS, spotId });
@@ -180,7 +180,7 @@ const initialState = { spots: [] };
     switch (action.type) {
       case FETCH_SPOTS_SUCCESS:
         return { ...state, spots: action.payload };
-      case GET_SPOT:
+      case RETRIEVE_SPOT:
         return { ...state, spot: action.payload };
       case UPDATE_SPOT:
         return { ...state, spots: action.payload };

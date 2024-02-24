@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
-const CreateSpot = () => {
-  const user = useSelector((state) => state.session.user);
-  return user ? (
-    <NavLink to="/spots/new">Create New Spot</NavLink>
-  ) : (
-    <p>Please log in or sign up to create a spot.</p>
-  );
+function CreateSpot() {
+  
+	const user = useSelector((state) => {
+		return state.session.user;
+	});
+
+	return user ? <NavLink to={`/spots/new`}>Create New Spot</NavLink> : null;
 }
 
 export default CreateSpot;
