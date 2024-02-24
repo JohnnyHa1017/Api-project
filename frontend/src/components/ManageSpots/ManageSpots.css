@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 /* Styles for the update button within user-spots-list */
@@ -36,8 +37,6 @@
   background-color: #4caf50;
   color: white;
   padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s, transform 0.2s;
@@ -61,7 +60,7 @@
   background-color: #e51e53;
   color: white;
   padding: 10px 20px;
-  border: none;
+  border: #6d6d6dc7 2px solid;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
@@ -93,6 +92,7 @@ p.spot-price {
   display: flex;
   justify-content: flex-start;
   margin: 0;
+  font-family: "Nanum Pen Script", cursive;
 }
 
 /* Styles for the create-spot button */

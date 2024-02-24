@@ -12,19 +12,19 @@ export const fetchSpotsSuccess = (spots) => ({ type: FETCH_SPOTS_SUCCESS, payloa
 export const getSpot = (spot) => ({ type: RETRIEVE_SPOT, payload: spot });
 export const spotCreated = (spot) => ({ type: SPOT_CREATED, payload: spot });
 export const updateSpot = (spot) => ({ type: UPDATE_SPOT, payload: spot });
-export const deleteSpot = (spotId) => ({ type: DELETE_SPOTS, spotId });
+export const deleteSpot = (spotId) => ({ type: DELETE_SPOTS, spotId: spotId });
 
 // Thunks
 export const fetchSpots = () => {
   return async (dispatch) => {
     try {
-      const response = await fetch("api/spots", {
-        method: "GET",
-      });
-      const data = await response.json();
-      if (data && data.Spots) {
-        dispatch(fetchSpotsSuccess(data.Spots));
-      }
+		const response = await csrfFetch("api/spots", {
+			method: "GET",
+		});
+    const data = await response.json();
+    if (data && data.Spots) {
+      dispatch(fetchSpotsSuccess(data.Spots));
+    }
     } catch (error) {
       console.error("Failed to fetch spots:", error);
       throw new Error(error);
@@ -47,30 +47,28 @@ export const fetchSpot = (spotId) => async (dispatch) => {
   }
 };
 
-export const fetchCreateSpot = (spot) => async (dispatch) => {
+export const fetchCreateSpot = (spot, images) => async (dispatch) => {
   try {
     const response = await csrfFetch("/api/spots", {
       method: "POST",
       body: JSON.stringify(spot),
     });
+
     if (!response.ok) {
       console.error("Failed to create spot. Server returned:", response.status, response.statusText);
       throw new Error("Failed to create spot");
     }
-    const data = await response.json();
-      dispatch(getSpot(data))
 
-      await Promise.all(
-        spot.SpotImages.map((img) =>
-          csrfFetch(`/api/spots/${data.id}/images`, {
-            method: "POST",
-            body: JSON.stringify({
-              url: img.url,
-            }),
-          })
-        )
-      );
-      return data;
+    const data = await response.json();
+      dispatch(getSpot(data.id));
+
+    if (images && images.length > 0) {
+      for (const imageUrl of images) {
+        dispatch(uploadSpotImage(data.id, imageUrl));
+      }
+    }
+
+    return data;
   } catch (error) {
     console.error("Failed to create spot", error);
     throw error;
@@ -170,10 +168,12 @@ export const fetchDeleteSpot = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "DELETE",
     });
-    const data = await response.json();
 
+  const data = await response.json();
     if (data) {
-      dispatch(deleteSpot(spotId));
+      console.log('SPOTS.JS', 'DATA', data);
+      console.log('SPOTS.JS', 'DATA.spotId', data.spotId);
+      dispatch(deleteSpot(data.spotId));
     }
 
   } catch (error) {
@@ -195,7 +195,7 @@ const initialState = { spots: [] };
       case DELETE_SPOTS:
         return {
           ...state,
-          spots: state.spots.filter((spot) => spot.id !== action.spotId),
+          spots: state.spots.filter((spot) => spot.id !== action.spotId)
         };
       default:
         return state;

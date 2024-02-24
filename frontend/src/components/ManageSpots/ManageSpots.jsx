@@ -11,30 +11,41 @@ const ManageSpots = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const user = useSelector(state => {
-    return state.session.user;
-  });
-  const userId = user.id;
+  const user = useSelector(state => state.session.user);
+  const userId = user?.id || null;
 
-  const spots = useSelector(state => {
-    return state.spots.spots;
-  });
+  const spots = useSelector(state => state.spots.spots);
 
-  const cachedSpots = useMemo(() => JSON.parse(localStorage.getItem("cachedSpots")) || [], []);
+  const cachedSpots = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("cachedSpots")) || [];
+    } catch (error) {
+      console.error("Error parsing cachedSpots from localStorage:", error);
+      return [];
+    }
+  }, []);
 
   useEffect(() => {
-    if (cachedSpots.length === 0) {
-      dispatch(fetchSpots());
+    try {
+      if (cachedSpots.length === 0) {
+        dispatch(fetchSpots());
+      }
+    } catch (error) {
+      console.error("Error in useEffect:", error);
     }
   }, [dispatch, cachedSpots]);
 
   useEffect(() => {
-    localStorage.setItem("cachedSpots", JSON.stringify(spots));
+    try {
+      localStorage.setItem("cachedSpots", JSON.stringify([...spots]));
+    } catch (error) {
+      console.error("Error storing spots in localStorage:", error);
+    }
   }, [spots]);
 
   let spotArr = Object.values(spots);
   spotArr = spotArr.filter(spot => spot.ownerId == userId);
-  
+
   return (
     <div className="large-boxes">
       <div className="user-spots">
