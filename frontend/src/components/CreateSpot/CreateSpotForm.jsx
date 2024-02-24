@@ -35,7 +35,7 @@ const CreateSpotForm = ({ title, spot = null }) => {
   const handleCreate = async () => {
     try {
       if (Object.values(errors).every((value) => value === undefined)) {
-        const createdSpot = dispatch(
+        const createdSpot = await dispatch(
           spotActions.fetchCreateSpot({
             country,
             address,
@@ -65,7 +65,7 @@ const CreateSpotForm = ({ title, spot = null }) => {
   const handleUpdate = async () => {
     try {
       if (Object.values(errors).every((value) => value === undefined)) {
-        const updatedSpot = dispatch(
+        const updatedSpot = await dispatch(
           spotActions.fetchUpdateSpot(
             {
               id: spot.id,
@@ -313,8 +313,6 @@ const CreateSpotForm = ({ title, spot = null }) => {
 			</div>
 			<button>{spot === null ? "Create Spot" : "Update Your Spot"}</button>
 		</form>
-    <button onClick={handleCreate}>Create Spot</button>
-    <button onClick={handleUpdate}>Update Spot</button>
     </div>
   );
 };

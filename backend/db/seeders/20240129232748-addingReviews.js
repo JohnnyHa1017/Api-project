@@ -20,18 +20,30 @@ module.exports = {
         {
           "userId": 2,
           "spotId": 2,
-          "review": "This was a awesome!",
+          "review": "This was an awesome find!",
           "stars": 3,
         },
         {
           "userId": 3,
           "spotId": 3,
-          "review": "Spot was an awesome!",
+          "review": "Spot was awesome!",
           "stars": 4,
+        },
+        {
+          "userId": 2,
+          "spotId": 1,
+          "review": "This was an incredible spot!",
+          "stars": 5,
+        },
+        {
+          "userId": 3,
+          "spotId": 2,
+          "review": "This was an awesome stay!",
+          "stars": 3,
         },
       ], { validate: true });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
   },

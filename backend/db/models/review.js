@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL,
       allowNull: false,
       validate: {
-        isInt: {
+        isNumeric: {
           msg: 'Stars must be an integer from 1 to 5',
         },
         customValidation(value) {

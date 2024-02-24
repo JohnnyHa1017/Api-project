@@ -7,11 +7,16 @@ const DeleteSpotModal = ({ spotId }) => {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(deleteSpot(spotId));
-    closeModal();
-  };
+  const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		try {
+			await dispatch(deleteSpot(spotId));
+			closeModal();
+		} catch (error) {
+			console.error("Error deleting spot:", error);
+  }
+	};
 
   const handleCancel = () => {
     closeModal();
