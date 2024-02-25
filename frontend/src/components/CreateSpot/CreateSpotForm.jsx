@@ -8,89 +8,115 @@ const CreateSpotForm = ({ title, spot = null }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [country, setCountry] = useState(spot?.country || "");
-  const [address, setAddress] = useState(spot?.address || "");
-  const [city, setCity] = useState(spot?.city || "");
-  const [state, setState] = useState(spot?.state || "");
-  const [lat, setLat] = useState(spot?.lat || "");
-  const [lng, setLng] = useState(spot?.lng || "");
-  const [description, setDescription] = useState(spot?.description || "");
-  const [name, setName] = useState(spot?.name || "");
-  const [price, setPrice] = useState(spot?.price || "");
-  const oldPreview = spot?.SpotImages.find((image) => image.preview === true);
+  // Destructure spot object
+  const {
+    country: initialCountry = "",
+    address: initialAddress = "",
+    city: initialCity = "",
+    state: initialState = "",
+    lat: initialLat = "",
+    lng: initialLng = "",
+    description: initialDescription = "",
+    name: initialName = "",
+    price: initialPrice = "",
+    SpotImages: initialSpotImages = [],
+  } = spot || {};
+
+  const oldPreview = initialSpotImages.find((image) => image.preview === true);
+  const [country, setCountry] = useState(initialCountry);
+  const [address, setAddress] = useState(initialAddress);
+  const [city, setCity] = useState(initialCity);
+  const [state, setState] = useState(initialState);
+  const [lat, setLat] = useState(initialLat);
+  const [lng, setLng] = useState(initialLng);
+  const [description, setDescription] = useState(initialDescription);
+  const [name, setName] = useState(initialName);
+  const [price, setPrice] = useState(initialPrice);
   const [previewImage, setPreviewImage] = useState(spot?.previewImage || oldPreview?.url || "");
 
-	const falseImage = spot === null ? [] : spot.SpotImages.filter((image) => image.preview === false);
-	const [image2, setImage2] = useState(falseImage.length > 0 ? falseImage[0].url : "");
-	const [image3, setImage3] = useState(falseImage.length > 1 ? falseImage[1].url : "");
-	const [image4, setImage4] = useState(falseImage.length > 2 ? falseImage[2].url : "");
-	const [image5, setImage5] = useState(falseImage.length > 3 ? falseImage[3].url : "");
+  const falseImage =
+    spot === null ? [] : initialSpotImages.filter((image) => image.preview === false);
+  const [image2, setImage2] = useState(falseImage.length > 0 ? falseImage[0].url : "");
+  const [image3, setImage3] = useState(falseImage.length > 1 ? falseImage[1].url : "");
+  const [image4, setImage4] = useState(falseImage.length > 2 ? falseImage[2].url : "");
+  const [image5, setImage5] = useState(falseImage.length > 3 ? falseImage[3].url : "");
 
   const [errors, setErrors] = useState({});
 
   const validateLng = (lng) => (lng < -180 || lng > 180 ? "lng needs to be between -180 and 180" : undefined);
   const validateLat = (lat) => (lat < -90 || lat > 90 ? "lat needs to be between -90 and 90" : undefined);
-  const validateImgURL = (imageUrl) => (!["png", "jpeg", "jpg"].includes(imageUrl.slice(-3)) ? "Image URL must end in .png, .jpeg, .jpg" : undefined);
+	const validateImgURL = (imageUrl) => {
+		const validImgExtensions = ["png", "jpg", "jpeg"];
+		const fileExtension = imageUrl.split('.').pop();
 
-  const handleCreate = async () => {
-    try {
-      if (Object.values(errors).every((value) => value === undefined)) {
-        const createdSpot = dispatch(
-          spotActions.fetchCreateSpot({
-            country,
-            address,
-            city,
-            state,
-            lat,
-            lng,
-            description,
-            name,
-            price,
-            previewImage,
-            image2,
-            image3,
-            image4,
-            image5,
-          })
-        );
-        if (createdSpot) {
-          navigate(`/spots/${createdSpot.id}`);
-        }
-      }
+		return validImgExtensions.includes(fileExtension.toLowerCase())
+			? undefined
+			: "Image URL must end in .png, .jpeg, .jpg";
+	};
+
+		// Creating a New Spot
+	const handleCreate = async () => {
+		try {
+			if (Object.values(errors).every((value) => value === undefined)) {
+				const createdSpot = dispatch(
+					spotActions.fetchCreateSpot({
+						country,
+						address,
+						city,
+						state,
+						lat,
+						lng,
+						description,
+						name,
+						price,
+						previewImage,
+						image2,
+						image3,
+						image4,
+						image5,
+					})
+				);
+
+				if (createdSpot) {
+					return createdSpot;
+				}
+			}
     } catch (error) {
       console.error("Failed to handle create", error);
     }
   };
 
-  const handleUpdate = async () => {
-    try {
-      if (Object.values(errors).every((value) => value === undefined)) {
-        const updatedSpot = dispatch(
-          spotActions.fetchUpdateSpot(
-            {
-              id: spot.id,
-              country,
-              address,
-              city,
-              state,
-              lat,
-              lng,
-              description,
-              name,
-              price,
-              previewImage,
-              image2,
-              image3,
-              image4,
-              image5,
-            },
-            spot
-          )
-        );
-        if (updatedSpot) {
-          navigate(`/spots/${updatedSpot.id}`);
-        }
-      }
+		// Updating an Existing Spot
+	const handleUpdate = async () => {
+		try {
+			if (Object.values(errors).every((value) => value === undefined)) {
+				const updatedSpot = dispatch(
+					spotActions.fetchUpdateSpot(
+						{
+							id: spot.id,
+							country,
+							address,
+							city,
+							state,
+							lat,
+							lng,
+							description,
+							name,
+							price,
+							previewImage,
+							image2,
+							image3,
+							image4,
+							image5,
+						},
+						spot
+					)
+				);
+
+				if (updatedSpot) {
+					return updatedSpot;
+				}
+			}
     } catch (error) {
       console.error("Failed to handle update", error);
     }
@@ -118,15 +144,23 @@ const CreateSpotForm = ({ title, spot = null }) => {
 
     setErrors(newErrors);
 
-    if (Object.values(newErrors).every((value) => value === undefined)) {
-      try {
-        if (spot === null) {
-          // Create Spot
-          handleCreate();
-        } else {
-          // Update Spot
-          handleUpdate();
-        }
+		if (Object.values(newErrors).every((value) => value === undefined)) {
+			try {
+				if (spot === null) {
+					// Invoke Create Spot then Navigate to it's page url
+					handleCreate().then((createdSpot) => {
+						if (createdSpot) {
+							navigate(`/spots/${createdSpot.id}`);
+						}
+					});
+				} else {
+					// Invoke Update Spot then Navigate to it's page url
+					handleUpdate().then((updatedSpot) => {
+						if (updatedSpot) {
+							navigate(`/spots/${updatedSpot.id}`);
+						}
+					});
+				}
       } catch (error) {
         console.error("Failed to handle submit", error);
       }
@@ -254,7 +288,7 @@ const CreateSpotForm = ({ title, spot = null }) => {
 			{spot === null ? (
 				<p>Submit a link to at least one photo to publish your spot.</p>
 			) : (
-				<p> Have some new picture to add?</p>
+				<p> Have some new pictures to add?</p>
 			)}
 
 			<div className="spot-photos">

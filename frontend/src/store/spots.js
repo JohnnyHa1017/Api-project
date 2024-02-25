@@ -102,7 +102,7 @@ export const fetchCreateSpot = (spot, images) => async (dispatch) => {
   }
 };
 
-// Middleware Helperfunctions to Handle Images
+// Middleware Helper Functions to Handle Images
 const deleteSpotImages = async (images) => {
   const deleteRequests = await images.map((image) =>
     csrfFetch(`/api/spot-images/${image.id}`, {
@@ -182,9 +182,7 @@ export const fetchUpdateSpot = (spot, spotPrior) => async (dispatch) => {
     );
 
     return data;
-  } else {
-    return null;
-  }
+    }
   } catch (error) {
     console.error("Failed to update spot", error);
   }
@@ -205,7 +203,7 @@ export const fetchDeleteSpot = (spotId) => async (dispatch) => {
 		if (data) {
 			dispatch(deleteSpot(spotId));
 		}
-    
+
   } catch (error) {
     console.error("Failed to delete spot", error);
   }

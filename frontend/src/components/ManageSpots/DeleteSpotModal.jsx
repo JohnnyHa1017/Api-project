@@ -29,7 +29,7 @@ function DeleteSpotModal({ spotId }) {
       </div>
     </>
   );
-};
+}
 
 export default DeleteSpotModal;
 
