@@ -137,12 +137,16 @@ ul.review-list button:hover {
   background-color: #4caf50;
   color: white;
   padding: 10px 20px;
-  border: none;
+  border: #6d6d6dc7 2px solid;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
   margin: 10px 0;
   transition: background-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-family: "Shadows Into Light", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .reviews button:hover {

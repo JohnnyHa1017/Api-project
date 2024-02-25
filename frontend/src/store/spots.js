@@ -76,7 +76,15 @@ export const getUserSpots = () => async (dispatch) => {
 };
 
 // Fetch Create Spot Thunk
-export const fetchCreateSpot = (spot, images) => async (dispatch) => {
+export const fetchCreateSpot = (spot) => async (dispatch) => {
+    const {
+    previewImage,
+    image2,
+    image3,
+    image4,
+    image5,
+  } = spot;
+
   try {
     const response = await csrfFetch("/api/spots", {
       method: "POST",
@@ -88,14 +96,16 @@ export const fetchCreateSpot = (spot, images) => async (dispatch) => {
     }
 
     const data = await response.json();
-    dispatch(createUpdateSpot(data));
-
-    if (images && images.length > 0) {
-      for (const imageUrl of images) {
-        dispatch(uploadSpotImage(data.id, imageUrl));
-      }
+    if (previewImage) {
+      await uploadSpotImage(data.id, previewImage, true);
     }
 
+    const images = [image2, image3, image4, image5].filter((image) => image);
+    await Promise.all(
+      images.map((image) => uploadSpotImage(data.id, image, false))
+      );
+
+    dispatch(createUpdateSpot(spot));
     return data;
   } catch (error) {
     console.error("Failed to create spot:", error);
@@ -217,7 +227,7 @@ const initialState = { spot: null, spots: [] };
       case FETCH_SPOTS_SUCCESS:
         return { ...state, spots: action.payload };
       case CREATE_UPDATE_SPOT:
-        return { ...state, spots: action.payload };
+        return { ...state, spot: action.payload };
       case RETRIEVE_SPOT:
         return { ...state, spot: action.payload };
       case GET_USER_SPOTS:

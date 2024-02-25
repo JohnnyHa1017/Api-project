@@ -38,61 +38,74 @@ function Reviews({ spot }) {
 
 	const avgStarRatingAsNumber = parseFloat(spot.avgStarRating);
 
-	return (
-	<>
-  {reviews.length > 0 ? (
+  return (
     <div className="reviews">
       <h3>Reviews</h3>
-      <p className="star-rating">
-        <i className="fas fa-star"></i>
-        {!spot.numReviews ? "New" : avgStarRatingAsNumber.toFixed(1)}
-        {spot.numReviews === 0
-          ? ""
-          : spot.numReviews === 1
-          ? `·${spot.numReviews} Review`
-          : `·${spot.numReviews} Reviews`}
-      </p>
-      {user &&
-      reviews.every((review) => review.userId !== user.id) &&
-      user.id !== spot.ownerId ? (
-        <OpenModalButton
-          buttonText="Write Your Review"
-          modalComponent={<CreateReviewModal spot={spot} />}
-        />
-      ) : null}
-      <ul className="review-list">
-        {reviews.length === 0 &&
-        user !== null &&
-        user.id !== spot.ownerId ? (
-          <p>Be the first to review!</p>
-        ) : (
-          reviews.map((review) => (
-            <React.Fragment key={review.id}>
-              <li>
-                {`${review.User.firstName} ${review.User.lastName}:
-                ${review.review}
-                ${monthNames[review.createdAtDate.getMonth()]}
-                ${review.createdAtDate.getFullYear()}`}
-              </li>
-              {user && user.id === review.userId ? (
+      {reviews.length > 0 ? (
+        <>
+          <p className="star-rating">
+            <i className="fas fa-star"></i>
+            {spot.numReviews === 0 ? "New" : avgStarRatingAsNumber.toFixed(1)}
+            {spot.numReviews === 0
+              ? ""
+              : spot.numReviews === 1
+              ? `·${spot.numReviews} Review`
+              : `·${spot.numReviews} Reviews`}
+          </p>
+          {user &&
+          reviews.every((review) => review.userId !== user.id) &&
+          user.id !== spot.ownerId ? (
+            <OpenModalButton
+              buttonText="Write Your Review"
+              modalComponent={<CreateReviewModal spot={spot} />}
+              className="common-review-button"
+            />
+          ) : null}
+          <ul className="review-list">
+            {reviews.map((review) => (
+              <React.Fragment key={review.id}>
+                <li>
+                  {`${review.User.firstName} ${review.User.lastName}:
+                  ${review.review}
+                  ${monthNames[review.createdAtDate.getMonth()]}
+                  ${review.createdAtDate.getFullYear()}`}
+                </li>
+                {user && user.id === review.userId ? (
+                  <OpenModalButton
+                    buttonText="Delete Review"
+                    modalComponent={
+                      <DeleteReviewModal reviewId={review.id} spotId={spot.id} />
+                    }
+                    className="common-review-button"
+                  />
+                ) : null}
+              </React.Fragment>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <>
+          {(user === null || user.id !== spot.ownerId) && (
+            <div className="common-review-button">
+              <p>Be the first to post a review!</p>
+              {user && (
                 <OpenModalButton
-                  buttonText="Delete Review"
-                  modalComponent={
-                    <DeleteReviewModal reviewId={review.id} spotId={spot.id} />
-                  }
+                  buttonText="Write Your Review"
+                  modalComponent={<CreateReviewModal spot={spot} />}
                 />
-              ) : null}
-            </React.Fragment>
-          ))
-        )}
-      </ul>
+              )}
+            </div>
+          )}
+          {(user === null || user.id === spot.ownerId) && (
+            <>
+              <h1>Hey Owner! Your spot is too new still!</h1>
+              <h2>No reviews have been made yet! 😔</h2>
+            </>
+          )}
+        </>
+      )}
     </div>
-  ) : (
-    <h1>Reviews not found</h1>
-  )}
-</>
-
-	);
+  );
 }
 
 export default Reviews;
