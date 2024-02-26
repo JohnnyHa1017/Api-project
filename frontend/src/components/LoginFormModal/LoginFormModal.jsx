@@ -11,43 +11,75 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
+  const isButtonEnabled = credential.length >= 4 && password.length >= 6;
+
+  const loginDemoUser = async () => {
+    setErrors({});
+    const demoCredential = "Demo-lition";
+    const demoPassword = "password";
+
+    try {
+      await dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }));
+      closeModal();
+    } catch (res) {
+      const data = await res.json();
+      if (data && data.errors) {
+        setErrors(data.errors);
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+
+    try {
+      await dispatch(sessionActions.login({ credential, password }));
+      closeModal();
+    } catch (res) {
+      const data = await res.json();
+      if (data && data.errors) {
+        setErrors(data.errors);
+      } else {
+        setErrors({ message: "The provided credentials were invalid" });
+      }
+    }
   };
 
   return (
     <>
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={handleSubmit}>
         <label>
-          Username or Email
           <input
-            type="text"
+            type='text'
+            className="credential"
             value={credential}
+            placeholder='Username or Email'
             onChange={(e) => setCredential(e.target.value)}
             required
           />
         </label>
         <label>
-          Password
           <input
-            type="password"
+            className="password"
+            type='password'
             value={password}
+            placeholder='Password'
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+        {errors.message && <p className="error-message">{errors.message}</p>}
+        <button className="submit" type='submit' disabled={!isButtonEnabled}>
+          Log In
+        </button>
+        <button
+          className='demo-user'
+          onClick={loginDemoUser}
+        >
+          Demo-User
+        </button>
       </form>
     </>
   );

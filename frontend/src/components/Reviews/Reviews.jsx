@@ -41,17 +41,43 @@ function Reviews({ spot }) {
   return (
     <div className="reviews">
       <h3>Reviews</h3>
-      {reviews.length > 0 ? (
+      <p className="star-rating">
+        <i className="fas fa-star"></i>
+        {reviews.length > 0
+          ? (
+            <>
+              {spot.numReviews === 0 ? "New" : avgStarRatingAsNumber.toFixed(1)}
+              {spot.numReviews === 0
+                ? ""
+                : spot.numReviews === 1
+                  ? `·${spot.numReviews} Review`
+                  : `·${spot.numReviews} Reviews`}
+            </>
+          )
+          : "No reviews have been made yet 😔"}
+        {reviews.length === 0 && (
+          <>
+            {(user === null || user.id !== spot.ownerId) && (
+              <div className="common-review-button">
+                <p>Be the first to post a review!</p>
+                {user && (
+                  <OpenModalButton
+                    buttonText="Write Your Review"
+                    modalComponent={<CreateReviewModal spot={spot} />}
+                  />
+                )}
+              </div>
+            )}
+            {(user === null || user.id === spot.ownerId) && (
+              <>
+                <h1>Hey Owner! Your spot is still too new!</h1>
+              </>
+            )}
+          </>
+        )}
+      </p>
+      {reviews.length > 0 && (
         <>
-          <p className="star-rating">
-            <i className="fas fa-star"></i>
-            {spot.numReviews === 0 ? "New" : avgStarRatingAsNumber.toFixed(1)}
-            {spot.numReviews === 0
-              ? ""
-              : spot.numReviews === 1
-              ? `·${spot.numReviews} Review`
-              : `·${spot.numReviews} Reviews`}
-          </p>
           {user &&
           reviews.every((review) => review.userId !== user.id) &&
           user.id !== spot.ownerId ? (
@@ -82,26 +108,6 @@ function Reviews({ spot }) {
               </React.Fragment>
             ))}
           </ul>
-        </>
-      ) : (
-        <>
-          {(user === null || user.id !== spot.ownerId) && (
-            <div className="common-review-button">
-              <p>Be the first to post a review!</p>
-              {user && (
-                <OpenModalButton
-                  buttonText="Write Your Review"
-                  modalComponent={<CreateReviewModal spot={spot} />}
-                />
-              )}
-            </div>
-          )}
-          {(user === null || user.id === spot.ownerId) && (
-            <>
-              <h1>Hey Owner! Your spot is too new still!</h1>
-              <h2>No reviews have been made yet! 😔</h2>
-            </>
-          )}
         </>
       )}
     </div>

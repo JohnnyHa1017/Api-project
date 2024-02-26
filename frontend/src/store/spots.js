@@ -112,7 +112,7 @@ export const fetchCreateSpot = (spot) => async (dispatch) => {
   }
 };
 
-// Middleware Helper Functions to Handle Images
+  // Helper function to delete spot images
 const deleteSpotImages = async (images) => {
   const deleteRequests = await images.map((image) =>
     csrfFetch(`/api/spot-images/${image.id}`, {
@@ -121,7 +121,7 @@ const deleteSpotImages = async (images) => {
   );
   await Promise.all(deleteRequests);
 };
-
+  // Helper function to upload a spot image
 const uploadSpotImage = async (spotId, url, preview) => {
   await csrfFetch(`/api/spots/${spotId}/images`, {
     method: "POST",

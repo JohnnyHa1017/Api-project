@@ -9,9 +9,9 @@ function CreateReviewModal({ spot }) {
 	const [review, setReview] = useState("");
 	const [stars, setStars] = useState(0);
 	const [errors, setErrors] = useState({});
-	const fiveStars = [1, 2, 3, 4, 5];
 	const { closeModal } = useModal();
 	const buttonEnable = review.length >= 10 && stars > 0;
+	const fiveStars = [1, 2, 3, 4, 5];
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -45,7 +45,7 @@ function CreateReviewModal({ spot }) {
 				></textarea>
 				{fiveStars.map((num) => (
 					<i
-						className={num <= stars ? "fas fa-star" : "fa-regular fa-star"}
+					className={num <= stars ? "fas fa-star filled" : "far fa-star empty"}
 						key={num}
 						onClick={() => {
 							setStars(num);

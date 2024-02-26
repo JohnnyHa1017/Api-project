@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
-import * as sessionActions from '../../store/session';
-import './SignupForm.css';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
+import { signup } from "../../store/session";
+import "./SignupForm.css";
 
 function SignupFormModal() {
   const dispatch = useDispatch();
@@ -15,19 +15,21 @@ function SignupFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  const buttonEnable =
+    username.length >= 4 &&
+    password.length >= 6 &&
+    email.length >= 1 &&
+    firstName.length >= 1;
+
+  const renderError = (field) => {
+    return errors[field] && <p className='error-messages'>{errors[field]}</p>;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
       setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password
-        })
-      )
+      return dispatch(signup({ email, username, firstName, lastName, password }))
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
@@ -37,78 +39,83 @@ function SignupFormModal() {
         });
     }
     return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
+      confirmPassword:
+        "Confirm Password field must be the same as the Password field",
     });
   };
 
   return (
     <>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
+      <form className='signup' onSubmit={handleSubmit}>
         <label>
-          Email
           <input
-            type="text"
+            type='text'
             value={email}
+            placeholder='Email'
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {renderError("email")}
         <label>
-          Username
           <input
-            type="text"
+            type='text'
+            placeholder='Username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        {renderError("username")}
         <label>
-          First Name
           <input
-            type="text"
+            type='text'
             value={firstName}
+            placeholder='First Name'
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
+        {renderError("firstName")}
         <label>
-          Last Name
           <input
-            type="text"
+            type='text'
             value={lastName}
+            placeholder='Last Name'
             onChange={(e) => setLastName(e.target.value)}
             required
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
+        {renderError("lastName")}
         <label>
-          Password
           <input
-            type="password"
+            type='password'
             value={password}
+            placeholder='Password'
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        {renderError("password")}
         <label>
-          Confirm Password
           <input
-            type="password"
+            className='confirm-pass'
+            type='password'
             value={confirmPassword}
+            placeholder='Confirm Password'
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </label>
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        {renderError("confirmPassword")}
+        <button className='sign-in-button' type='submit' disabled={!buttonEnable}>
+          Sign Up
+        </button>
       </form>
     </>
   );
+
 }
 
 export default SignupFormModal;

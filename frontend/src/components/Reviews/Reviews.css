@@ -24,7 +24,7 @@
 }
 
 .create-review i {
-  color: #ffc107;
+  color: #07ff93;
   cursor: pointer;
   font-size: 24px;
   margin: 0 5px;
@@ -60,6 +60,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-family: "Nanum Pen Script", cursive;
   width: 100%;
   margin-top: 10px;
 }
@@ -114,7 +115,7 @@ ul.review-list button:hover {
 
 .delete-review-modal .yes-delete,
 .delete-review-modal button {
-  background-color: #4caf50;
+  background-color: #646464c7;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -123,13 +124,16 @@ ul.review-list button:hover {
   transition: background-color 0.2s;
 }
 
-.delete-review-modal .yes-delete:hover,
+.delete-review-modal .yes-delete:hover {
+  background-color: #e51e53;
+}
 .delete-review-modal button:hover {
-  background-color: #43a047;
+  background-color: #36d472d5;
 }
 
 .delete-review-modal .yes-delete {
   margin-right: 10px;
+  background-color: #c41447;
 }
 
 /* Reviews Styles */
@@ -152,3 +156,5 @@ ul.review-list button:hover {
 .reviews button:hover {
   background-color: #43a047;
 }
+
+

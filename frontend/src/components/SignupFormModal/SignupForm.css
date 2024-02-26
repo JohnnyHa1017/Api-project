@@ -1,0 +1,105 @@
+/* Font Loading */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Shadows+Into+Light&display=swap');
+
+/* General styling for heading */
+h1 {
+  text-align: center;
+  font-family: sans-serif;
+  margin-top: 20px;
+}
+
+/* Styles for modal content container */
+#modal-content {
+  position: relative;
+  top: 50px;
+  max-width: 400px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.5);
+  padding: 20px;
+  background-color: #f5f5f5;
+  margin: auto;
+  border: #6d6d6dc7 2px solid;
+  border-radius: 5px;
+  font-family: "Nanum Pen Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Styles for signup form */
+form.signup {
+  display: flex;
+  width: calc(100% - 40px);
+  height: fit-content;
+  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: white;
+}
+
+/* Styles for form labels */
+.signup label {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Styles for form inputs */
+.signup input {
+  box-sizing: border-box;
+  height: 40px;
+  width: 100%;
+  border: #6d6d6dc7 2px solid;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-family: "Nanum Pen Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Special style for confirmation password input */
+.confirm-pass {
+  border-bottom: none;
+}
+
+/* Styles for focused input */
+input:focus {
+  outline: 2px solid #72fff3c7;
+  height: 40px;
+}
+
+/* Styles for signup button */
+.sign-in-button {
+  background-color: #e51e53;
+  color: white;
+  width: 100%;
+  height: 50px;
+  border-radius: 6px;
+  border-style: none;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+/* Styles for disabled button */
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+/* Styles for error messages */
+.error-messages {
+  box-sizing: border-box;
+  color: red;
+  margin-top: 10px;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+}
