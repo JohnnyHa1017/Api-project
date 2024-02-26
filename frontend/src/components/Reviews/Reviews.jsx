@@ -70,7 +70,7 @@ function Reviews({ spot }) {
             )}
             {(user === null || user.id === spot.ownerId) && (
               <>
-                <h1>Hey Owner! Your spot is still too new!</h1>
+                <h1>This spot is still too new!</h1>
               </>
             )}
           </>
