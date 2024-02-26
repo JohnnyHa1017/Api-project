@@ -137,7 +137,132 @@ module.exports = {
           spotId: 5,
           url: "https://i.postimg.cc/qq7vTqm6/Selfie-20240220-Paxmichelin-004.jpg",
           preview: false,
-        }
+        },
+        {
+          spotId: 6,
+          url: "https://i.postimg.cc/fLw5jvNr/Selfie-20240226-Joxha-000.jpg",
+          preview: true,
+        },
+        {
+          spotId: 6,
+          url: "https://i.postimg.cc/GhZQSRRY/Selfie-20240226-Joxha-001.jpg",
+          preview: false,
+        },
+        {
+          spotId: 6,
+          url: "https://i.postimg.cc/x88RBTqG/Selfie-20240226-Joxha-002.jpg",
+          preview: false,
+        },
+        {
+          spotId: 6,
+          url: "https://i.postimg.cc/gJNsM6ck/Selfie-20240226-Joxha-003.jpg",
+          preview: false,
+        },
+        {
+          spotId: 6,
+          url: "https://i.postimg.cc/15gBHtks/Selfie-20240226-Joxha-004.jpg",
+          preview: false,
+        },
+        {
+          spotId: 7,
+          url: "https://i.postimg.cc/tgFmzTVY/Selfie-20240226-Havocado-000.jpg",
+          preview: true,
+        },
+        {
+          spotId: 7,
+          url: "https://i.postimg.cc/6p2PyzWV/Selfie-20240226-Havocado-001.jpg",
+          preview: false,
+        },
+        {
+          spotId: 7,
+          url: "https://i.postimg.cc/13kj66Xk/Selfie-20240226-Havocado-002.jpg",
+          preview: false,
+        },
+        {
+          spotId: 7,
+          url: "https://i.postimg.cc/ZnsfqvXD/Selfie-20240226-Havocado-003.jpg",
+          preview: false,
+        },
+        {
+          spotId: 7,
+          url: "https://i.postimg.cc/59sKgDjq/Selfie-20240226-Havocado-004.jpg",
+          preview: false,
+        },
+        {
+          spotId: 8,
+          url: "https://i.postimg.cc/7hRV48TF/Selfie-20240226-Joxha-004-0.jpg",
+          preview: true,
+        },
+        {
+          spotId: 8,
+          url: "https://i.postimg.cc/c1kTwY5F/Selfie-20240226-Joxha-004-1.jpg",
+          preview: false,
+        },
+        {
+          spotId: 8,
+          url: "https://i.postimg.cc/5tJmbm62/Selfie-20240226-Joxha-004-2.jpg",
+          preview: false,
+        },
+        {
+          spotId: 8,
+          url: "https://i.postimg.cc/DzcPZbXd/Selfie-20240226-Joxha-004-3.jpg",
+          preview: false,
+        },
+        {
+          spotId: 8,
+          url: "https://i.postimg.cc/9M8PP51D/Selfie-20240226-Joxha-004-4.jpg",
+          preview: false,
+        },
+        {
+          spotId: 9,
+          url: "https://i.postimg.cc/YqVnKg6v/Selfie-20240226-Havoo-000.jpg",
+          preview: true,
+        },
+        {
+          spotId: 9,
+          url: "https://i.postimg.cc/JzkT1nxP/Selfie-20240226-Havoo-001.jpg",
+          preview: false,
+        },
+        {
+          spotId: 9,
+          url: "https://i.postimg.cc/NfLJzbHh/Selfie-20240226-Havoo-002.jpg",
+          preview: false,
+        },
+        {
+          spotId: 9,
+          url: "https://i.postimg.cc/bvfmdhF8/Selfie-20240226-Havoo-003.jpg",
+          preview: false,
+        },
+        {
+          spotId: 9,
+          url: "https://i.postimg.cc/GpPqy5ZD/Selfie-20240226-Havoo-004.jpg",
+          preview: false,
+        },
+        {
+          spotId: 10,
+          url: "https://i.postimg.cc/QxMwrhvy/Selfie-20240226-Boxerrr-000.jpg",
+          preview: true,
+        },
+        {
+          spotId: 10,
+          url: "https://i.postimg.cc/KzFpp2nQ/Selfie-20240226-Boxerrr-001.jpg",
+          preview: false,
+        },
+        {
+          spotId: 10,
+          url: "https://i.postimg.cc/1RB2Tf7F/Selfie-20240226-Boxerrr-002.jpg",
+          preview: false,
+        },
+        {
+          spotId: 10,
+          url: "https://i.postimg.cc/L58CR3Q1/Selfie-20240226-Boxerrr-003.jpg",
+          preview: false,
+        },
+        {
+          spotId: 10,
+          url: "https://i.postimg.cc/KzNqdHfb/Selfie-20240226-Boxerrr-004.jpg",
+          preview: false,
+        },
       ], { validate: true });
   } catch (err) {
     console.error(err);
