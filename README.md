@@ -11,6 +11,8 @@
 
 ## USER AUTHENTICATION/AUTHORIZATION
 
+[![abnb-sign-up.gif](https://i.postimg.cc/cJQfJJ1H/abnb-sign-up.gif)](https://postimg.cc/B8njY4K9)
+
 ### All endpoints that require authentication
 
 All endpoints that require a current user to be logged in.
@@ -87,6 +89,8 @@ Returns the information about the current user that is logged in.
     ```
 
 ### Log In a User
+
+[![abnb-demo-login.gif](https://i.postimg.cc/Xqv5xcfG/abnb-demo-login.gif)](https://postimg.cc/N9WLjXPB)
 
 Logs in a current user with valid credentials and returns the current user's
 information.
@@ -390,6 +394,8 @@ Returns the details of a spot specified by its id.
 
 ### Create a Spot
 
+[![abnb-create-spot.gif](https://i.postimg.cc/ncP4R5wH/abnb-create-spot.gif)](https://postimg.cc/RNwJqPB8)
+
 Creates and returns a new spot.
 
 * Require Authentication: true
@@ -508,6 +514,8 @@ Create and return a new image for a spot specified by id.
     ```
 
 ### Edit a Spot
+
+[![abnb-update-delete.gif](https://i.postimg.cc/JhwbmXLv/abnb-update-delete.gif)](https://postimg.cc/nXksGCMG)
 
 Updates and returns an existing spot.
 
@@ -629,6 +637,8 @@ Deletes an existing spot.
     ```
 
 ## REVIEWS
+
+[![abnb-reviews.gif](https://i.postimg.cc/j5tPnrCh/abnb-reviews.gif)](https://postimg.cc/WDYhxCGD)
 
 ### Get all Reviews of the Current User
 
