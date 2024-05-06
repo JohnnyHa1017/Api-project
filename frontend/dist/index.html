@@ -6,11 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://kit.fontawesome.com/2687a23fd5.js" crossorigin="anonymous"></script>
     <title>Arkesia BnB</title>
-    <script type="module" crossorigin src="/assets/index-ffd482da.js"></script>
-    <link rel="stylesheet" href="/assets/index-20b4dbe3.css">
+    <style>
+      footer {
+        text-align: center;
+      }
+      .icons {
+        list-style: none;
+        padding: 0;
+      }
+      .icons li {
+        display: inline-block;
+        margin: 0 10px;
+        position: relative;
+      }
+      .icons li .tooltip {
+        visibility: hidden;
+        width: 120px;
+        background-color: rgba(0, 0, 0, 0.422);
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 60%;
+      }
+      .icons li:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+      .icons li a i {
+        font-size: 230%;
+      }
+      footer h3 {
+        text-decoration: underline;
+        font-size: 120%;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-e360291b.js"></script>
+    <link rel="stylesheet" href="/assets/index-6f18bcb0.css">
   </head>
   <body>
     <div id="root"></div>
     
+    <footer>
+      <h3>Let's Get Connected !</h3>
+      <div class="inner">
+        <ul class="icons">
+          <li><a href="tel:+16268728711"><i class="fas fa-phone"></i><span class="label"></span><span class="tooltip">Call</span></a></li>
+          <li><a href="mailto:johnny.ha.github@gmail.com"><i class="fas fa-envelope"></i><span class="label"></span><span class="tooltip">E-Mail</span></a></li>
+          <li><a href="https://johnnyha.me"><i class="fas fa-globe"></i><span class="label"></span><span class="tooltip">Portfolio</span></a></li>
+          <li><a href="https://github.com/JohnnyHa1017"><i class="fab fa-github"></i><span class="label"></span><span class="tooltip">GitHub</span></a></li>
+          <li><a href="https://www.linkedin.com/in/johnny-ha-7710b4303/?trk=public-profile-join-page"><i class="fab fa-linkedin"></i><span class="label"></span><span class="tooltip">LinkedIn</span></a></li>
+          <li><a href="https://wellfound.com/u/johnny-ha-1"><i class="fab fa-angellist"></i><span class="label"></span><span class="tooltip">AngelList</span></a></li>
+          <li><a href="https://docs.google.com/document/d/1HpVY6MA7E6ru3PFpDhr7VNsE54rTpgx4LoikmnwMMBo/edit?usp=sharing"><i class="fas fa-file"></i><span class="tooltip">Resume</span></a></li>
+        </ul>
+      </div>
+    </footer>
   </body>
-</html>
+  </html>
+
