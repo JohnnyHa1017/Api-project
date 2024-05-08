@@ -1,4 +1,11 @@
-# AirBnB Clone
+# [ ArkesiaBnB, an AirBnB Clone ]
+[My GitHub Profile](https://github.com/JohnnyHa1017)
+
+**Introducing ArkesiaBnB:**
+  > “ Welcome to ArkesiaBnB, a whimsical twist on the popular rental platform set in the fantastical realm of Arkesia, inspired by the world of Lost Ark. Here, users can transform their homes into enchanting retreats for fellow travelers to discover and enjoy. Crafted with the enchanting trio of Express, React, and Redux, ArkesiaBnB offers a seamless experience for hosts to showcase their homes and for guests to find their dream accommodations in this magical realm.”
+
+#### Follow ArkesiaBnB Live
+[Live Link to My Project](https://johnny-ha-api-project.onrender.com)
 
 ## Database Schema Design
 
